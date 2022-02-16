@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} Темы {% endblock %}
+
+{% block content %}
+<h2 id="section">Темы и задачи</h2>
+
+<div class="theme_card">
+    <h3>{{ tasks.0.theme }}. {{ tasks.0.theme.description }}</h3>
+    <div class="task_container">
+        {% for task in tasks %}
+        <div class="task_info">
+            <span class="mark">-/100</span>
+            <a href="/task/{{ task.id }}">
+            <h4>{{ task.title }}</h4>
+            <span>{{ task.description }}</span>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="theme_card">
+    <h3>{{ tasks.0.theme }}. Да, это тоже самое. Просто хотел добавить объема</h3>
+    <div class="task_container">
+        {% for task in tasks %}
+        <div class="task_info">
+            <span class="mark">-/100</span>
+            <a href="task.html">
+            <h4>{{ task.title }}</h4>
+            <span>{{ task.description }}</span>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="theme_card">
+    <h3>Тема ???. Продолжение будет. Ну я надеюсь</h3>
+</div>
+<div class="theme_card">
+    <h3>Тема ???. Точно будет</h3>
+</div>
+<div class="theme_card">
+    <h3>Тема ???. Или нет</h3>
+</div>
+<div class="theme_card">
+    <h3>Тема ???. Вообще должно</h3>
+</div>
+{% endblock%}

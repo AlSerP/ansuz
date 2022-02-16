@@ -1,5 +1,6 @@
 .idea/
 venv/
+tester/
 db.sqlite3
 
 pages/migrations/
@@ -9,6 +10,10 @@ pages/__init__.py
 accounts/migrations/
 accounts/__pycache__/
 accounts/__init__.py
+
+tasks/migrations/
+tasks/__pycache__/
+tasks/__init__.py
 
 ansuz/__init__.py
 ansuz/__pycache__/

@@ -104,5 +104,20 @@ main {
     padding: 0 15% 0 15%;
 }
 
+.disabled {
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.6;
+}
+
+.version_info {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    color: #777;
+    position: fixed;
+    top: 6px;
+    left: 10px;
+}
+
 /* (224, 236, 240) */
 /* (240, 239, 224) */

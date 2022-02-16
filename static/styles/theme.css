@@ -64,8 +64,8 @@
 
 .mark {
     position: absolute;
-    margin-left: calc(13% + 10px);
-    margin-top: 16px;
+    margin-left: calc(13% + 18px);
+    margin-top: 15px;
 
     color: rgb(144, 159, 224);
 }
