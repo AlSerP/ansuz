@@ -1,3 +1,4 @@
+dj-database-url==0.5.0
 appdirs==1.4.4
 asgiref==3.2.10
 certifi==2021.5.30
@@ -7,11 +8,10 @@ Django==3.1
 filelock==3.0.12
 gunicorn==20.1.0
 idna==2.10
-pygame==2.0.1
-pyglet==1.5.7
 pytz==2020.1
 six==1.15.0
 sqlparse==0.3.1
 urllib3==1.26.5
 virtualenv==20.0.31
 whitenoise==6.0.0
+psycopg2==2.8.5
