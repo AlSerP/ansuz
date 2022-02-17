@@ -1,1 +1,1 @@
-web: gunicorn anzus.wsgi --log-file -
+web: gunicorn ansuz.wsgi --log-file -
