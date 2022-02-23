@@ -22,12 +22,13 @@ class UploadSolutionView(LoginRequiredMixin, CreateView):
 
 class ThemeTasksView(ListView):
     model = Task
-    context_object_name = 'tasks'
+    context_object_name = 'themes'
+    # context_object_name = 'themes'
     template_name = 'tasks/category.html'
 
     def get_queryset(self, **kwargs):
-        theme_id = Theme.objects.get(title="Тема 0")
-        return Task.objects.filter(theme=theme_id)
+        return Theme.objects.all()
+        # return themes
         # if Tag.objects.filter(name=tag_name).exists():
         #     # return Image.objects.filter(tags__contains=self.request.GET['search'])
         #     return Tag.objects.get(name=tag_name).image_set.all()

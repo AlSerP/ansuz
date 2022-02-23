@@ -26,7 +26,7 @@ class Theme(models.Model):
 
 
 class Task(models.Model):
-    theme = models.ForeignKey(Theme, on_delete=models.SET_NULL, related_name='theme', null=True)
+    theme = models.ForeignKey(Theme, on_delete=models.SET_NULL, related_name='tasks', null=True)
     title = models.CharField(max_length=120, null=False)
     description = models.CharField(max_length=500, null=True)
     text = models.TextField(null=False)
