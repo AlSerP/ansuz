@@ -1,6 +1,6 @@
 .idea/
 venv/
-tester/
+django_venv/
 db.sqlite3
 
 pages/migrations/
