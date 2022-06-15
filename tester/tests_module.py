@@ -56,4 +56,4 @@ def test_cpp(file: str, input: list, output: list) -> list:
 
 
 if __name__ == "__main__":
-    print(test_cpp('main.cpp', ['1 2', '2 2', '3 3', '4 1'], ['6', '8', '12', '10']))
+    print(test_cpp('.\\tester\\main.cpp', ['1 2', '2 2', '3 3', '4 1'], ['6', '8', '12', '10']))

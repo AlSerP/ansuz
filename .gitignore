@@ -17,3 +17,5 @@ tasks/__init__.py
 
 ansuz/__init__.py
 ansuz/__pycache__/
+
+media/
