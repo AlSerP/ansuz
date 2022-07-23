@@ -8,5 +8,9 @@ class HomePageView(ListView):
     template_name = 'tasks/category.html'
 
     def get_queryset(self, **kwargs):
-        theme_id = Theme.objects.get(title="Тема 0")
+        try:
+            theme_id = Theme.objects.get(title="Тема 0")
+        except Theme.DoesNotExist:
+            theme_id = None
+
         return Task.objects.filter(theme=theme_id)

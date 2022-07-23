@@ -1,5 +1,6 @@
 .idea/
 venv/
+django_venv/
 db.sqlite3
 
 pages/__pycache__/
@@ -13,3 +14,7 @@ tasks/__init__.py
 
 ansuz/__init__.py
 ansuz/__pycache__/
+
+media/
+
+/tester/*.exe

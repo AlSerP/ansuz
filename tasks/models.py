@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator, FileExtensionValidator
 from time import gmtime, strftime
-from tester.tests_module import test_cpp
+# from tester.tests_module import test_cpp
 
 statuses = [
     ('SE', 'Отправлено на проверку'),
@@ -55,7 +55,7 @@ class Solution(models.Model):
 
     def compile(self):
         pass
-        # test_cpp(directory_path, self.task.tests, self.task.answers)
+        # result = test_cpp(directory_path, self.task.tests, self.task.answers)
 
 
 # myModel = MyModel()

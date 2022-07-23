@@ -81,3 +81,18 @@
 .m_well {
     color: rgb(151, 224, 144) !important;
 }
+
+
+@media screen and (max-width: 1400px) {
+    .mark {
+        margin-left: 13%;
+        margin-top: 13px;
+    }
+    .task_info {
+        font-size: 80% !important;
+        width: 22% !important;
+    }
+    .task_info h4 {
+        font-size: 15px;
+    }
+  }

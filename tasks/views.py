@@ -21,6 +21,7 @@ class UploadSolutionView(LoginRequiredMixin, CreateView):
 
 
 class ThemeTasksView(ListView):
+    """Тема со всеми задачами"""
     model = Task
     context_object_name = 'themes'
     # context_object_name = 'themes'
@@ -35,6 +36,7 @@ class ThemeTasksView(ListView):
 
 
 class TaskView(DetailView):
+    """Отдельная задача"""
     model = Task
     template_name = 'tasks/task_page.html'
     context_object_name = 'task'

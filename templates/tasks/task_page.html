@@ -11,15 +11,11 @@
         <ol>
             {% for t_task in tts %}
                 {% if task == t_task %}
-                <a href="/task/{{ t_task.id }}" style="color: rgb(195, 144, 224);"><li>>> {{ t_task }}</li></a>
+                <a href="{% url 'task' t_task.id %}" style="color: rgb(195, 144, 224);"><li>>> {{ t_task }}</li></a>
                 {% else %}
-                <a href="/task/{{ t_task.id }}"><li>{{ t_task }}</li></a>
+                <a href="{% url 'task' t_task.id %}"><li>{{ t_task }}</li></a>
                 {% endif %}
             {% endfor %}
-<!--            <a href="#"><li>Простое Сложение</li></a>-->
-<!--            <a href="#"><li>Простое Вычитание</li></a>-->
-<!--            <a href="#"><li>Умножаем АКИ Мастера</li></a>-->
-<!--            <a href="#"><li>Сложное деление</li></a>-->
         </ol>
     </div>
     <div class="task_card">
@@ -40,7 +36,7 @@
                 {% endfor %}
             </table>
 
-            <a href="#" class="send_button disabled">Добавить решение</a>
+            <a href="{% url 'upload_solution' task.id %}" class="send_button">Добавить решение</a>
         </div>
     </div>
 {% endblock %}
