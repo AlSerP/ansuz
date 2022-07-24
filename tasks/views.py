@@ -13,10 +13,11 @@ class UploadSolutionView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
-        form.instance.task = Task.objects.get(pk=1)
+        form.instance.task = Task.objects.get(pk=self.kwargs.get('pk'))
         form.instance.user = self.request.user
         solution = form.save()
         solution.save()
+        solution.compile()
         return super().form_valid(form)
 
 
@@ -43,16 +44,25 @@ class TaskView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(TaskView, self).get_context_data(**kwargs)
-        tests = Task.objects.get(id=self.kwargs.get('pk')).tests
-        answers = Task.objects.get(id=self.kwargs.get('pk')).answers
-        tests = tests[1:-1].replace("'", '').split(',')
-        answers = answers[1:-1].replace("'", '').split(',')
+        task = Task.objects.get(id=self.kwargs.get('pk'))
+
+        tests = task.tests
+        tests = tests[1:-1].replace('"', '').split(',')
+        answers = task.answers
+        answers = answers[1:-1].replace('"', '').split(',')
+
         data_task = []
         for test, answer in zip(tests, answers):
             data_task.append([test, answer])
-        print(data_task)
+
         context['tests'] = data_task
+        context['solutions'] = task.get_solutions(self.request.user)
+        context['best_solution'] = task.get_best_solution(self.request.user)
 
         context['tts'] = Task.objects.filter(theme=Task.objects.get(id=self.kwargs.get('pk')).theme.id)
 
         return context
+
+# def compile_solution(request):
+#     if request.method == "POST":
+#         solution = request.POST.get("username")

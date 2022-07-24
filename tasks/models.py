@@ -2,7 +2,8 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator, FileExtensionValidator
 from time import gmtime, strftime
-# from tester.tests_module import test_cpp
+from tester.tests_module import test_cpp
+import json
 
 statuses = [
     ('SE', 'Отправлено на проверку'),
@@ -37,9 +38,19 @@ class Task(models.Model):
     def __str__(self):
         return self.title
 
+    def get_solutions(self, user):
+        return self.solutions.filter(user=user)
+
+    def get_best_solution(self, user):
+        solutions = self.get_solutions(user).order_by("-mark")
+        if solutions:
+            return solutions[0]
+
+        return None
+
 
 class Solution(models.Model):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, null=False)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, null=False, related_name='solutions')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
     mark = models.PositiveSmallIntegerField(null=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
     status = models.CharField(max_length=30, default=statuses[0][0], choices=statuses)
@@ -54,7 +65,15 @@ class Solution(models.Model):
         return f'{self.task} + {self.status}'
 
     def compile(self):
-        pass
+        compiled: dict = test_cpp(str(self.upload), self.task.tests, self.task.answers)
+        print(compiled['return_code'])
+        self.status = compiled['return_code']
+        if self.status != 'ER':
+            self.response = str(compiled['tests_passed']) + '/' + str(compiled['tests_number'])
+            self.mark = compiled['mark']
+            self.tests = json.dumps(compiled['results'])
+        else:
+            self.response = compiled['message']
         # result = test_cpp(directory_path, self.task.tests, self.task.answers)
 
 

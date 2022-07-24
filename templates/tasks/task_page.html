@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load poll_extras %}
 
 {% load static %}
 
@@ -7,7 +8,6 @@
 {% block content %}
     <div class="task_navbar">
         <h3><a href="{% url 'home' %}">>> {{ task.theme }}. {{ task.theme.description }}</a></h3>
-
         <ol>
             {% for t_task in tts %}
                 {% if task == t_task %}
@@ -20,7 +20,7 @@
     </div>
     <div class="task_card">
         <h2>{{ task.title }}</h2>
-
+        <h3>{% get_mark task user %}/100</h3>
         <div class="task_text">
 <!--            <p style="white-space: pre;">-->
             {% autoescape off %}
@@ -37,6 +37,16 @@
             </table>
 
             <a href="{% url 'upload_solution' task.id %}" class="send_button">Добавить решение</a>
+
+            <div>
+            {% for solution in solutions %}
+                {% if solution.status == 'ER' %}
+                    <span>{{ solution.status }} {{ solution.response }}</span>
+                {% else %}
+                    <span>{{ solution.status }} {{ solution.mark }} {{ solution.response }}</span><br>
+                {% endif %}
+            {% endfor %}
+            </div>
         </div>
     </div>
 {% endblock %}
