@@ -20,7 +20,11 @@
     </div>
     <div class="task_card">
         <h2>{{ task.title }}</h2>
+        {% if user.is_authenticated %}
         <h3>{% get_mark task user %}/100</h3>
+        {% else %}
+        <h3>-/100</h3>
+        {% endif %}
         <div class="task_text">
 <!--            <p style="white-space: pre;">-->
             {% autoescape off %}

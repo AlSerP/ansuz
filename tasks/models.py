@@ -52,7 +52,7 @@ class Task(models.Model):
 class Solution(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, null=False, related_name='solutions')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
-    mark = models.PositiveSmallIntegerField(null=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    mark = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     status = models.CharField(max_length=30, default=statuses[0][0], choices=statuses)
     upload = models.FileField(upload_to=directory_path, validators=[FileExtensionValidator(allowed_extensions=['cpp'])])
 

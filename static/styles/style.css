@@ -76,7 +76,7 @@ h2, h3 {
     color: rgb(195, 144, 224);
 }
 
-.user:after {
+.drop_menu:after {
     content: "";
 
     width: 0;
@@ -94,7 +94,7 @@ h2, h3 {
     transition: .2s;
 }
 
-.user:hover:after {
+.drop_menu:hover:after {
     border-color: rgb(195, 144, 224) transparent;
 }
 

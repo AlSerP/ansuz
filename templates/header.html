@@ -6,5 +6,10 @@
         <a href="#" class="active">Задачи</a>
         <a href="/admin/" class="disabled">Лидеры</a>
     </div>
+
+    {% if user.is_authenticated %}
+    <a href="#" class="user drop_menu">{{ user.username }}</a>
+    {% else %}
     <a href="#" class="user disabled">Войти</a>
+    {% endif %}
 </div>
