@@ -56,8 +56,9 @@ class TaskView(DetailView):
             data_task.append([test, answer])
 
         context['tests'] = data_task
-        context['solutions'] = task.get_solutions(self.request.user)
-        context['best_solution'] = task.get_best_solution(self.request.user)
+        if self.request.user.is_authenticated:
+            context['solutions'] = task.get_solutions(self.request.user)
+            context['best_solution'] = task.get_best_solution(self.request.user)
 
         context['tts'] = Task.objects.filter(theme=Task.objects.get(id=self.kwargs.get('pk')).theme.id)
 
