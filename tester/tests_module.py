@@ -1,31 +1,17 @@
-import os
-import stat
 from tester.cpp_runner import run_cpp
-from subprocess import run, CompletedProcess
+from subprocess import run
 import json
 
 
 def test_cpp(file: str, input: list, output: list) -> dict:
     report = {}
-    # try:
-    #     status = run(['g++', 'media/' + file], capture_output=True)  # Compile file
-    # except:
-    #     report = {}
-    #     report['return_code'] = 'ER'
-    #     return report
 
     status = run(['g++', 'media/' + file], capture_output=True)
 
     if status.returncode == 1:
         # Error case
-        # print(status.stderr.decode())
         report['return_code'] = 'ER'
-        # print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-        # print(status.stdout.decode().split('media/'))
-        # print(status.stderr.decode())
-        # report['message'] = status.stdout.decode()
         report['message'] = status.stderr.decode()
-        # return False
 
     else:
         correctness = True
@@ -37,7 +23,7 @@ def test_cpp(file: str, input: list, output: list) -> dict:
         for i, question, answer in zip(range(1, tests_number + 1), in_list, out_list):
             program_out = run_cpp(question)
 
-            test_correctness = (answer == program_out)
+            test_correctness = (str(answer) == str(program_out))
             correctness *= test_correctness
             correct_counter += test_correctness
 
@@ -49,7 +35,6 @@ def test_cpp(file: str, input: list, output: list) -> dict:
             result['is_correct'] = test_correctness
 
             report['results'].append(result)
-            # tests_results.append([i, test_correctness, question, answer, program_out])
 
         if correctness:
             report['return_code'] = 'CO'
@@ -59,7 +44,6 @@ def test_cpp(file: str, input: list, output: list) -> dict:
         report['tests_passed'] = correct_counter
         report['tests_number'] = tests_number
         report['mark'] = correct_counter * 100 // tests_number
-        # return [correctness, f'passed {correct_counter}/{tests_number} tests', tests_results]
 
     # with open('data.json', 'w') as outfile:
     #     json.dump(report, outfile)
@@ -67,5 +51,4 @@ def test_cpp(file: str, input: list, output: list) -> dict:
 
 
 if __name__ == "__main__":
-    # print(test_cpp('.\\tester\\main.cpp', ['1 2', '2 2', '3 3', '4 1'], ['6', '8', '12', '10']))
     print(test_cpp(input(), ['1 2', '2 2', '3 3', '4 1'], ['6', '8', '12', '10']))

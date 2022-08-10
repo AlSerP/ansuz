@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView
 from .models import Solution, Task, Theme
 from django.urls import reverse_lazy
 
@@ -10,7 +10,6 @@ class UploadSolutionView(LoginRequiredMixin, CreateView):
     model = Solution
     template_name = 'solution.html'
     fields = ['upload']
-    success_url = reverse_lazy('home')
 
     def form_valid(self, form):
         form.instance.task = Task.objects.get(pk=self.kwargs.get('pk'))
@@ -19,6 +18,9 @@ class UploadSolutionView(LoginRequiredMixin, CreateView):
         solution.save()
         solution.compile()
         return super().form_valid(form)
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('task', kwargs={'pk': self.kwargs.get('pk')})
 
 
 class ThemeTasksView(ListView):
@@ -64,6 +66,32 @@ class TaskView(DetailView):
 
         return context
 
-# def compile_solution(request):
-#     if request.method == "POST":
-#         solution = request.POST.get("username")
+
+class TaskCreationView(LoginRequiredMixin, CreateView):
+    """Создание задачи"""
+    model = Task
+    template_name = 'forms/task_creation.html'
+    fields = '__all__'
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        # form.instance.user = self.request.user
+        # TODO: Сохранить создателя задачи
+        task = form.save()
+        task.save()
+        return super().form_valid(form)
+
+
+class TaskDeleteView(LoginRequiredMixin, DeleteView):
+    model = Task
+    success_url = reverse_lazy('home')
+    template_name = 'forms/task_delete.html'
+
+
+class TaskUpdateView(LoginRequiredMixin, UpdateView):
+    model = Task
+    fields = '__all__'
+    template_name = 'forms/task_update.html'
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('task', kwargs={'pk': self.kwargs.get('pk')})
