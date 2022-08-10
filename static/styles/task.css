@@ -77,7 +77,7 @@ h3 {
  }
 
 .send_button {
-    margin-left: 472px;
+    margin-left: 23px;
     padding: 15px;
 
     border: 1px solid black;
@@ -85,6 +85,10 @@ h3 {
     text-decoration: none;
     
     transition: .4s;
+    background-color: white;
+
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
 }
 
 .send_button:hover {
@@ -104,10 +108,30 @@ h3 {
     justify-content: space-between;
 }
 
-.tests {
+.closed {
     display: none;
 }
 
 .opened {
     display: block;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    margin: auto auto auto 60%;
+    text-decoration: underline;
+    color: #333;
+}
+
+.solution_form {
+    display: flex;
+    justify-content: flex-end;
+    vertical-align: middle;
+}
+
+.flex-box {
+    display: flex;
+    justify-content: flex-end;
 }

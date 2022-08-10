@@ -9,7 +9,7 @@
     <div class="task_navbar">
         <h3><a href="{% url 'home' %}">>> {{ task.theme }}. {{ task.theme.description }}</a></h3>
         <ol>
-            {% for t_task in tts %}
+            {% for t_task in theme_tasks %}
                 {% if task == t_task %}
                 <a href="{% url 'task' t_task.id %}" style="color: rgb(195, 144, 224);"><li>>> {{ t_task }}</li></a>
                 {% else %}
@@ -40,7 +40,18 @@
 
         {% if user.is_authenticated %}
             <div class="solutions_block">
-                <a href="{% url 'upload_solution' task.id %}" class="send_button">Добавить решение</a>
+                <form method="post" action="upload" enctype="multipart/form-data" class="closed" id="solution_form">
+                    {% csrf_token %}
+                    <label for="id_upload" class="custom-file-upload">Выбрать файл</label>
+                    <input type="file" name="upload" required id="id_upload" style="display: none">
+                    <button class="send_button">Отправить</button>
+                </form>
+
+<!--                <a href="{% url 'upload_solution' task.id %}" class="send_button">Добавить решение</a>-->
+                <div class="flex-box">
+                    <a onclick="openSolutionForm()" class="send_button" id="open_button">Добавить решение</a>
+                </div>
+
                 <h3>Решения</h3>
                 <div class="solutions_list">
                     {% for solution in solutions %}
@@ -50,8 +61,8 @@
                             <div>{{ solution.mark }}</div>
                             <div><a style="cursor: pointer; color: rgb(195, 144, 224); text-decoration: underline" onclick='openSolution("sol{{ forloop.counter }}")'>Просмотр</a></div>
                         </div>
-                        <div class="tests" id="sol{{ forloop.counter }}">
-                        {% for test in solution.tests|str_to_json %}
+                        <div class="closed" id="sol{{ forloop.counter }}">
+                        {% for test in solution.tests|str_to_json reversed %}
                             <div>Тест {{ test.test }} | Ответ: {{ test.output }} | Программа: {{ test.answer }}</div>
                         {% endfor %}
                         </div>
@@ -69,6 +80,19 @@
             document.getElementById(id).classList.remove('opened');
         else
             document.getElementById(id).classList.add('opened');
+    }
+
+    function openSolutionForm() {
+        id = 'solution_form';
+        id_button = 'open_button';
+        if (document.getElementById(id).classList.contains('solution_form')) {
+            document.getElementById(id).classList.remove('solution_form');
+            document.getElementById(id_button).classList.remove('closed');
+        }
+        else {
+            document.getElementById(id).classList.add('solution_form');
+            document.getElementById(id_button).classList.add('closed');
+        }
     }
 </script>
 {% endblock %}

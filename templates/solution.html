@@ -7,7 +7,7 @@
 {% block content %}
 <h2 id="section">Загрузить решение</h2>
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" action="/user/create_task" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Upload</button>
