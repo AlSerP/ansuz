@@ -1,4 +1,5 @@
 from django import template
+import json
 
 register = template.Library()
 
@@ -9,3 +10,10 @@ def get_mark(task, user):
         return task.get_best_solution(user).mark
     else:
         return '-'
+
+
+@register.filter(name='str_to_json')
+def str_to_json(string):
+    if string:
+        return json.loads(string)
+    return None
