@@ -14,6 +14,8 @@
     <h3>{{ theme }}. {{ theme.description }}</h3>
     <div class="task_container">
         {% for task in theme.tasks.all %}
+            {% can_edit_tasks user as is_moderator %}
+            {% if task.is_visible or is_moderator %}
             <div class="task_info">
                 <a href="/task/{{ task.id }}">
                     <div class="task-card-header">
@@ -36,6 +38,7 @@
                     <div class="task-description">{{ task.description }}</div>
                 </a>
             </div>
+            {% endif %}
         {% endfor %}
     </div>
 </div>

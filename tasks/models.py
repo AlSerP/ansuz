@@ -35,6 +35,9 @@ class Task(models.Model):
     tests = models.TextField(null=False)  # Use JSON
     answers = models.TextField(null=False)  # Use JSON
 
+    is_open = models.BooleanField(default=True)
+    is_visible = models.BooleanField(default=True)
+
     def __str__(self):
         return self.title
 

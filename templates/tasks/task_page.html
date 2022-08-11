@@ -6,14 +6,17 @@
 {% block title %} Темы {% endblock %}
 
 {% block content %}
+{% can_edit_tasks user as is_moderator %}
     <div class="task_navbar">
         <h3><a href="{% url 'home' %}">>> {{ task.theme }}. {{ task.theme.description }}</a></h3>
         <ol>
             {% for t_task in theme_tasks %}
-                {% if task == t_task %}
-                <a href="{% url 'task' t_task.id %}" style="color: rgb(195, 144, 224);"><li>>> {{ t_task }}</li></a>
-                {% else %}
-                <a href="{% url 'task' t_task.id %}"><li>{{ t_task }}</li></a>
+                {% if t_task.is_visible or is_moderator %}
+                    {% if task == t_task %}
+                    <a href="{% url 'task' t_task.id %}" style="color: rgb(195, 144, 224);"><li>>> {{ t_task }}</li></a>
+                    {% else %}
+                    <a href="{% url 'task' t_task.id %}"><li>{{ t_task }}</li></a>
+                    {% endif %}
                 {% endif %}
             {% endfor %}
         </ol>
@@ -23,7 +26,6 @@
         {% if user.is_authenticated %}
             <span>{% get_mark task user %}/100</span>
 
-            {% can_edit_tasks user as is_moderator %}
             {% if is_moderator %}
                 <br>
                 <a href="{% url 'delete_task' task.id %}">Удалить задачу</a>
@@ -48,17 +50,23 @@
 
         {% if user.is_authenticated %}
             <div class="solutions_block">
-                <form method="post" action="upload" enctype="multipart/form-data" class="closed" id="solution_form">
-                    {% csrf_token %}
-                    <label for="id_upload" class="custom-file-upload">Выбрать файл</label>
-                    <input type="file" name="upload" required id="id_upload" style="display: none">
-                    <button class="send_button">Отправить</button>
-                </form>
+                {% if task.is_open or is_moderator %}
+                    <form method="post" action="upload" enctype="multipart/form-data" class="closed" id="solution_form">
+                        {% csrf_token %}
+                        <label for="id_upload" class="custom-file-upload">Выбрать файл</label>
+                        <input type="file" name="upload" required id="id_upload" style="display: none">
+                        <button class="send_button">Отправить</button>
+                    </form>
 
-<!--                <a href="{% url 'upload_solution' task.id %}" class="send_button">Добавить решение</a>-->
-                <div class="flex-box">
-                    <a onclick="openSolutionForm()" class="send_button" id="open_button">Добавить решение</a>
-                </div>
+    <!--                <a href="{% url 'upload_solution' task.id %}" class="send_button">Добавить решение</a>-->
+                    <div class="flex-box">
+                        <a onclick="openSolutionForm()" class="send_button" id="open_button">Добавить решение</a>
+                    </div>
+                {% else %}
+                    <div class="flex-box">
+                        <a class="send_button disabled">Добавить решение</a>
+                    </div>
+                {% endif %}
 
                 <h3>Решения</h3>
                 <div class="solutions_list">
