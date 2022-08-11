@@ -17,3 +17,8 @@ def str_to_json(string):
     if string:
         return json.loads(string)
     return None
+
+
+@register.simple_tag(name='can_edit_tasks')
+def can_edit_tasks(user):
+    return user.has_perm('tasks.edit_tasks')

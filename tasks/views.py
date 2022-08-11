@@ -75,7 +75,7 @@ class TaskCreationView(PermissionRequiredMixin, CreateView):
     template_name = 'forms/task_creation.html'
     fields = '__all__'
     success_url = reverse_lazy('home')
-    permission_required = 'tasks.can_create_task'
+    permission_required = 'tasks.edit_tasks'
 
     def form_valid(self, form):
         # form.instance.user = self.request.user
@@ -89,14 +89,14 @@ class TaskDeleteView(PermissionRequiredMixin, DeleteView):
     model = Task
     success_url = reverse_lazy('home')
     template_name = 'forms/task_delete.html'
-    permission_required = 'tasks.can_create_task'
+    permission_required = 'tasks.edit_tasks'
 
 
 class TaskUpdateView(PermissionRequiredMixin, UpdateView):
     model = Task
     fields = '__all__'
     template_name = 'forms/task_update.html'
-    permission_required = 'tasks.can_create_task'
+    permission_required = 'tasks.edit_tasks'
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('task', kwargs={'pk': self.kwargs.get('pk')})

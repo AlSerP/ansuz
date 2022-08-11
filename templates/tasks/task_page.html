@@ -22,6 +22,14 @@
         <h2>{{ task.title }}</h2>
         {% if user.is_authenticated %}
             <span>{% get_mark task user %}/100</span>
+
+            {% can_edit_tasks user as is_moderator %}
+            {% if is_moderator %}
+                <br>
+                <a href="{% url 'delete_task' task.id %}">Удалить задачу</a>
+                <br>
+                <a href="{% url 'update_task' task.id %}">Редактировать задачу</a>
+            {% endif %}
         {% else %}
             <span>-/100</span>
         {% endif %}
