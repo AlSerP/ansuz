@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from django.urls import reverse_lazy
 from pathlib import Path
 import os
 
@@ -40,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'pages',
     'accounts',
-    'tasks'
+    'tasks',
 ]
 
 MIDDLEWARE = [
@@ -135,11 +136,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = reverse_lazy('login')
+LOGIN_REDIRECT_URL = reverse_lazy('home')
+LOGOUT_REDIRECT_URL = reverse_lazy('login')
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
-
 
 import dj_database_url
 prod_db = dj_database_url.config(conn_max_age=500)

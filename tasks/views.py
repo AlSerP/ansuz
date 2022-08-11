@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView
 from .models import Solution, Task, Theme
 from django.urls import reverse_lazy
@@ -69,12 +69,13 @@ class TaskView(DetailView):
         return context
 
 
-class TaskCreationView(LoginRequiredMixin, CreateView):
+class TaskCreationView(PermissionRequiredMixin, CreateView):
     """Создание задачи"""
     model = Task
     template_name = 'forms/task_creation.html'
     fields = '__all__'
     success_url = reverse_lazy('home')
+    permission_required = 'tasks.can_create_task'
 
     def form_valid(self, form):
         # form.instance.user = self.request.user
@@ -84,16 +85,18 @@ class TaskCreationView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class TaskDeleteView(LoginRequiredMixin, DeleteView):
+class TaskDeleteView(PermissionRequiredMixin, DeleteView):
     model = Task
     success_url = reverse_lazy('home')
     template_name = 'forms/task_delete.html'
+    permission_required = 'tasks.can_create_task'
 
 
-class TaskUpdateView(LoginRequiredMixin, UpdateView):
+class TaskUpdateView(PermissionRequiredMixin, UpdateView):
     model = Task
     fields = '__all__'
     template_name = 'forms/task_update.html'
+    permission_required = 'tasks.can_create_task'
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('task', kwargs={'pk': self.kwargs.get('pk')})
