@@ -100,3 +100,19 @@ class TaskUpdateView(PermissionRequiredMixin, UpdateView):
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('task', kwargs={'pk': self.kwargs.get('pk')})
+
+
+class ThemeCreationView(PermissionRequiredMixin, CreateView):
+    """Создание задачи"""
+    model = Theme
+    template_name = 'forms/task_creation.html'
+    fields = '__all__'
+    success_url = reverse_lazy('home')
+    permission_required = 'tasks.edit_tasks'
+
+    def form_valid(self, form):
+        # form.instance.user = self.request.user
+        # TODO: Сохранить создателя темы
+        theme = form.save()
+        theme.save()
+        return super().form_valid(form)

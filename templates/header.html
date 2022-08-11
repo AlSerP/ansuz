@@ -1,7 +1,7 @@
 {% load poll_extras %}
 
 <div class="navbar">
-    <h1 class="version_info">ALFA 0.2.1</h1>
+    <h1 class="version_info">ALFA 0.4.1</h1>
 
     <div class="link_menu">
         <a href="{% url 'home' %}">Главная</a>
@@ -9,7 +9,8 @@
         <a href="/admin/" class="disabled">Лидеры</a>
         {% can_edit_tasks user as is_moderator %}
         {% if is_moderator %}
-            <a href="/admin/">Создать задачу</a>
+            <a href="{% url 'create_task' %}">Создать задачу</a>
+            <a href="{% url 'create_theme' %}">Создать тему</a>
         {% endif %}
     </div>
 

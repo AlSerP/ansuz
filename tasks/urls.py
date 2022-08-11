@@ -9,4 +9,5 @@ urlpatterns = [
     path('create/', views.TaskCreationView.as_view(), name='create_task'),
     path('<pk>/delete/', views.TaskDeleteView.as_view(), name='delete_task'),
     path('<pk>/update/', views.TaskUpdateView.as_view(), name='update_task'),
+    path('create-theme/', views.ThemeCreationView.as_view(), name='create_theme'),
 ]
