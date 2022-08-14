@@ -22,15 +22,7 @@
                         <h4>{{ task.title }}</h4>
                         {% if user.is_authenticated %}
                             {% get_mark task user as mark %}
-                            {% if mark == '-' %}
-                                <span class="mark">{{ mark }}/100</span>
-                            {% elif mark == 0 %}
-                                <span class="mark m_zero">{{ mark }}/100</span>
-                            {% elif mark < 51 %}
-                                <span class="mark m_good">{{ mark }}/100</span>
-                            {% else %}
-                                <span class="mark m_well">{{ mark }}/100</span>
-                            {% endif %}
+                        <span class="mark {% if mark == '-' %} {% elif mark == 0 %} m_zero {% elif mark < 51 %} m_good {% else %} m_well {% endif %}">{{ mark }}/100</span>
                         {% else %}
                             <span class="mark">-/100</span>
                         {% endif %}

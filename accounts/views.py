@@ -1,12 +1,22 @@
-from django.shortcuts import render
-from django.contrib.auth.views import LoginView
-from django.conf import settings
-from django.shortcuts import redirect
+from django.contrib.auth.views import LoginView, LogoutView
+from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
+from .forms import CustomUserCreationForm
 
 
-class UserLogin (LoginView):
-    template_name = 'users/user_login.html'
+class UserLoginView (LoginView):
+    template_name = 'users/login.html'
+
+
+class UserLogoutView (LogoutView):
+    next_page = reverse_lazy('login')
+
+
+class UserSignUpView (CreateView):
+    template_name = 'users/signup.html'
+    success_url = reverse_lazy('login')
+    form_class = CustomUserCreationForm
+    success_message = "Your profile was created successfully"
 
 
 # TODO: Возможность выдачи групп пользователям
