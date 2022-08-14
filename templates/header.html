@@ -1,11 +1,13 @@
 {% load poll_extras %}
+{% load static %}
 
 <div class="navbar">
-    <h1 class="version_info">ALFA 0.4.1</h1>
+<!--ALFA 0.4.1-->
+    <img src="{% static 'images/ansuz_small.png' %}" alt="ansuz" class="header-logo">
 
     <div class="link_menu">
         <a href="{% url 'home' %}">Главная</a>
-        <a href="#" class="active">Задачи</a>
+        <a href="#">Задачи</a>
         <a href="/admin/" class="disabled">Лидеры</a>
         {% can_edit_tasks user as is_moderator %}
         {% if is_moderator %}

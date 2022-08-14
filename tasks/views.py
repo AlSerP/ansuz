@@ -12,12 +12,14 @@ class UploadSolutionView(LoginRequiredMixin, CreateView):
     fields = ['upload']
 
     def form_valid(self, form):
-        form.instance.task = Task.objects.get(pk=self.kwargs.get('pk'))
-        form.instance.user = self.request.user
-        solution = form.save()
-        solution.save()
-        solution.compile()
-        return super().form_valid(form)
+        task = Task.objects.get(pk=self.kwargs.get('pk'))
+        if task.is_open and task.is_visible:
+            form.instance.task = task
+            form.instance.user = self.request.user
+            solution = form.save()
+            solution.save()
+            solution.compile()
+            return super().form_valid(form)
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('task', kwargs={'pk': self.kwargs.get('pk')})
