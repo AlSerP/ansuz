@@ -22,3 +22,8 @@ def str_to_json(string):
 @register.simple_tag(name='can_edit_tasks')
 def can_edit_tasks(user):
     return user.has_perm('tasks.edit_tasks')
+
+
+@register.simple_tag(name='get_file_name')
+def get_file_name(upload):
+    return str(upload).split('/')[-1]

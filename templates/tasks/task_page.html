@@ -22,18 +22,21 @@
         </ol>
     </div>
     <div class="task_card">
-        <h2>{{ task.title }}</h2>
-        {% if user.is_authenticated %}
-            <span>{% get_mark task user %}/100</span>
-
-            {% if is_moderator %}
-                <br>
-                <a href="{% url 'delete_task' task.id %}">Удалить задачу</a>
-                <br>
-                <a href="{% url 'update_task' task.id %}">Редактировать задачу</a>
+        <div class="task-card-header">
+            <h2>{{ task.title }}</h2>
+            {% if user.is_authenticated %}
+            <div class="task-mark">
+                <span>{% get_mark task user %}/100</span>
+                <div class="progress-box"><div class="progress-bar" style="width: {% get_mark task user %}%"></div></div>
+            </div>
             {% endif %}
-        {% else %}
-            <span>-/100</span>
+        </div>
+        {% if is_moderator %}
+            <div class="task-moderation">
+                <span>Модерация: </span>
+                <a href="{% url 'delete_task' task.id %}">Удалить задачу</a>
+                <a href="{% url 'update_task' task.id %}">Редактировать задачу</a>
+            </div>
         {% endif %}
         <div class="task_text">
             {% autoescape off %}
@@ -69,21 +72,27 @@
                 {% endif %}
 
                 <h3>Решения</h3>
-                <div class="solutions_list">
+                <table class="solutions-list">
                     {% for solution in solutions %}
-                        <div class="solution">
-                            <div>{{ solution.upload }}</div>
-                            <div>{{ solution.status }}</div>
-                            <div>{{ solution.mark }}</div>
-                            <div><a style="cursor: pointer; color: rgb(195, 144, 224); text-decoration: underline" onclick='openSolution("sol{{ forloop.counter }}")'>Просмотр</a></div>
-                        </div>
+                        <tr>
+                          <td align="left">{% get_file_name solution.upload %}</td>
+                          <td align="center">{{ solution.status }}</td>
+                          <td align="center">{{ solution.mark }}</td>
+                          <td align="right"><a class="solution-more" onclick='openSolution("sol{{ forloop.counter }}")'>Просмотр</a></td>
+                        </tr>
+<!--                        <div class="solution">-->
+<!--                            <div>{{ solution.upload }}</div>-->
+<!--                            <div>{{ solution.status }}</div>-->
+<!--                            <div>{{ solution.mark }}</div>-->
+<!--                            <div><a class="solution-more" onclick='openSolution("sol{{ forloop.counter }}")'>Просмотр</a></div>-->
+<!--                        </div>-->
                         <div class="closed" id="sol{{ forloop.counter }}">
                         {% for test in solution.tests|str_to_json reversed %}
                             <div>Тест {{ test.test }} | Ответ: {{ test.output }} | Программа: {{ test.answer }}</div>
                         {% endfor %}
                         </div>
                     {% endfor %}
-                </div>
+                </table>
             </div>
         {% endif %}
     </div>
