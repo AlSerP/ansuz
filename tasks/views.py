@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView
 from .models import Solution, Task, Theme
 from django.urls import reverse_lazy
+from django.shortcuts import redirect
 
 
 class UploadSolutionView(LoginRequiredMixin, CreateView):
@@ -20,6 +21,7 @@ class UploadSolutionView(LoginRequiredMixin, CreateView):
             solution.save()
             solution.compile()
             return super().form_valid(form)
+        return redirect(reverse_lazy('home'))
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('task', kwargs={'pk': self.kwargs.get('pk')})
@@ -63,7 +65,7 @@ class TaskView(DetailView):
         context['tests'] = data_task
 
         if self.request.user.is_authenticated:
-            context['solutions'] = task.get_solutions(self.request.user)
+            context['solutions'] = task.get_solutions(self.request.user).order_by('-id')
             context['best_solution'] = task.get_best_solution(self.request.user)
 
         context['theme_tasks'] = Task.objects.filter(theme=Task.objects.get(id=self.kwargs.get('pk')).theme.id)

@@ -15,11 +15,14 @@
 
 .task_container {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    overflow-x: scroll;
 }
 
 .task_info {
     width: 23%;
+    min-width: 23%;
+    margin-right: 5px;
     max-height: 140px;
     padding: 10px;
 
