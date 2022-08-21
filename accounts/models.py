@@ -8,9 +8,10 @@ from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
     score = models.IntegerField(default=0)
+    email = models.EmailField(unique=True, default='-')
 
-    class Meta(object):
-        unique_together = ('email',)
+    # class Meta(object):
+    #     unique_together = ('username',)
 
     def __str__(self):
         return self.username

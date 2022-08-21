@@ -5,11 +5,29 @@
 {% block title %} Регистрация {% endblock %}
 
 {% block content %}
-<h2 id="section">Регистрация</h2>
-
-<form method="post">
+<form method="post" class="signup-form">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Зарегестрироваться</button>
+    <h2 id="section">Регистрация</h2>
+<!--    {{ form.as_p }}-->
+    {% for field in form %}
+        <div class="wrapper">
+            {{ field }}
+            <span class="focus-border"></span>
+        </div>
+    {% endfor %}
+    <div class="msg-error closed" id="password_error">Пароли должны совпадать</div>
+    <button type="submit" class="full-size-button">Зарегестрироваться</button>
 </form>
+
+<script>
+    function checkPasswordMatch() {
+        var password = document.getElementById('id_password1').value;
+        var confirmPassword = document.getElementById('id_password2').value;
+
+        if (password != confirmPassword && confirmPassword)
+            document.getElementById('password_error').classList.remove("closed");
+        else
+            document.getElementById('password_error').classList.add("closed");
+    }
+</script>
 {% endblock%}

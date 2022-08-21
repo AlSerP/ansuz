@@ -5,11 +5,18 @@
 {% block title %} Вход {% endblock %}
 
 {% block content %}
-<h2 id="section">Вход</h2>
 
-<form method="post">
+<form method="post" class="signup-form">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Войти</button>
+    <h2 id="section">Вход</h2>
+<!--    {{ form.as_p }}-->
+    {% for field in form %}
+        <div class="wrapper">
+            {{ field }}
+            <span class="focus-border"></span>
+        </div>
+    {% endfor %}
+    <div class="msg-error closed" id="password_error"></div>
+    <button type="submit" class="full-size-button">Войти</button>
 </form>
 {% endblock%}
