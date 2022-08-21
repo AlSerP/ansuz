@@ -198,6 +198,14 @@ h3 {
     color: rgb(124, 68, 156);
 }
 
-td {
+.solution-line td {
     border: none
+}
+
+.correct-test {
+    background-color: rgb(204, 255, 153);
+}
+
+.incorrect-test {
+    background-color: rgb(255, 102, 102);
 }

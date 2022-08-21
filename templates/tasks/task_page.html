@@ -73,24 +73,36 @@
 
                 <h3>Решения</h3>
                 <table class="solutions-list">
-                    {% for solution in solutions %}
-                        <tr>
+                    {% for solution in solutions reversed %}
+                        <tr class="solution-line">
                           <td align="left">{% get_file_name solution.upload %}</td>
                           <td align="center">{{ solution.status }}</td>
-                          <td align="center">{{ solution.mark }}</td>
+                          <td align="center">{{ solution.mark }} ||| {{ forloop.first }} </td>
                           <td align="right"><a class="solution-more" onclick='openSolution("sol{{ forloop.counter }}")'>Просмотр</a></td>
                         </tr>
-<!--                        <div class="solution">-->
-<!--                            <div>{{ solution.upload }}</div>-->
-<!--                            <div>{{ solution.status }}</div>-->
-<!--                            <div>{{ solution.mark }}</div>-->
-<!--                            <div><a class="solution-more" onclick='openSolution("sol{{ forloop.counter }}")'>Просмотр</a></div>-->
-<!--                        </div>-->
-                        <div class="closed" id="sol{{ forloop.counter }}">
-                        {% for test in solution.tests|str_to_json reversed %}
-                            <div>Тест {{ test.test }} | Ответ: {{ test.output }} | Программа: {{ test.answer }}</div>
-                        {% endfor %}
-                        </div>
+                        <tr>
+                            <td class="closed" id="sol{{ forloop.counter }}" colspan="4">
+                                <table  cellpadding="0" cellspacing="0" border="0">
+                                    <tr class="solution-line">
+                                        <td align="left">Тест</td>
+                                        <td align="center">Вввод</td>
+                                        <td align="center">Выход</td>
+                                    </tr>
+                                    {% for test in solution.tests|str_to_json reversed %}
+                                        {% if test.is_correct %}
+                                        <tr class="solution-line correct-test">
+                                        {% else %}
+                                        <tr class="solution-line incorrect-test">
+                                        {% endif %}
+                                            <td align="left">{{ test.test }}</td>
+                                            <td align="center">{{ test.output }}</td>
+                                            <td align="center">{{ test.answer }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </td>
+                        </tr>
+
                     {% endfor %}
                 </table>
             </div>
