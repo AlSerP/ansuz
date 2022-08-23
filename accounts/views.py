@@ -1,7 +1,9 @@
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.models import Group
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 class UserLoginView (LoginView):
@@ -18,6 +20,14 @@ class UserSignUpView (CreateView):
     success_url = reverse_lazy('login')
     form_class = CustomUserCreationForm
     success_message = "Your profile was created successfully"
+
+
+class GroupCreateView (PermissionRequiredMixin, CreateView):
+    template_name = 'forms/task_creation.html'
+    success_url = reverse_lazy('home')
+    model = Group
+    fields = '__all__'
+    permission_required = 'users.moderate_users'
 
 
 # TODO: Возможность выдачи групп пользователям

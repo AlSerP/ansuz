@@ -12,4 +12,5 @@ urlpatterns = [
     path('<pk>/update/', views.TaskUpdateView.as_view(), name='update_task'),
     path('create-theme/', views.ThemeCreationView.as_view(), name='create_theme'),
     path('solution/<int:pk>/', views.SolutionFileView.as_view(), name='solution'),
+    path('perm/<pk>', views.ThemePermissionAppendView.as_view(), name='theme_permission'),
 ]

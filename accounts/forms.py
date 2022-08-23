@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from .models import CustomUser
+from django.contrib.auth.models import Group
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -39,3 +40,7 @@ class CustomUserChangeFrom(forms.ModelForm):
     class Meta(UserChangeForm.Meta):
         model = CustomUser
         fields = ('username', 'email', 'first_name', 'last_name')
+
+
+class GroupSelectForm(forms.Form):
+    groups = forms.ModelMultipleChoiceField(queryset=Group.objects.all())

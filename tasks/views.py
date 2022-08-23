@@ -2,9 +2,25 @@ from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView
 from .models import Solution, Task, Theme
+from django.contrib.auth.models import Permission
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from accounts.models import CustomUser
+from django.contrib.contenttypes.models import ContentType
+from accounts.forms import GroupSelectForm
+from django.contrib.auth.models import Group
+from django.views.generic.edit import FormView
+
+
+def create_permission(per_code, per_name, con_type):
+    tasks_per, created = Permission.objects.get_or_create(codename=per_code,
+                                                          name=per_name,
+                                                          content_type=con_type)
+    return created
+
+
+def get_theme_permission_code(theme):
+    return f'view_theme{theme.pk}'
 
 
 class UploadSolutionView(LoginRequiredMixin, CreateView):
@@ -124,6 +140,13 @@ class ThemeCreationView(PermissionRequiredMixin, CreateView):
         # TODO: Сохранить создателя темы
         theme = form.save()
         theme.save()
+
+        per_code = f'view_theme{theme.pk}'
+        per_name = f'Can view Theme #{theme.pk}'
+        theme_type = ContentType.objects.get(app_label='tasks', model='theme')
+        print(per_code)
+        print(create_permission(per_code, per_name, theme_type))
+
         return super().form_valid(form)
 
 
@@ -145,3 +168,27 @@ class SolutionFileView(LoginRequiredMixin, DetailView):
         context['file_text'] = file_text
 
         return context
+
+
+class ThemePermissionAppendView(PermissionRequiredMixin, FormView):
+    template_name = 'forms/task_creation.html'
+    permission_required = 'tasks.edit_tasks'
+    form_class = GroupSelectForm
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        codename = f'view_theme{self.kwargs.get("pk")}'
+        for group in form.cleaned_data['groups']:
+            group.permissions.add(Permission.objects.get_or_create(codename=codename))
+
+        return super().form_valid(form)
+
+
+def get_groups_by_permission(permission: str):
+    perm = Permission.objects.get(codename=permission)
+    groups = Group.objects.all()
+    res = []
+    for group in groups:
+        if perm in group.permissions.all():
+            res.append(group)
+    return res

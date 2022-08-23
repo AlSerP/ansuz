@@ -6,4 +6,6 @@ class Command(BaseCommand):
     help = 'Print all Permissions'
 
     def handle(self, *args, **options):
-        print(Permission.objects.all())
+        permissions = Permission.objects.all()
+        for perm in permissions:
+            print(f'{perm.codename}  |  {perm.name}  |  {perm.content_type}')
