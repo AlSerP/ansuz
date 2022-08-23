@@ -16,7 +16,7 @@
 .task_container {
     display: flex;
     justify-content: flex-start;
-    overflow-x: scroll;
+    overflow: hidden;
 }
 
 .task_info {
@@ -31,8 +31,6 @@
     font-family: 'Roboto', sans-serif;
 
     color: black;
-
-    /* overflow: ellipsis; */
     overflow: hidden;
 
     transition: .4s;
@@ -45,8 +43,12 @@
     color: white;
 }
 
+a:hover .task-description {
+    color: white;
+}
+
 .task_info a {
-    display: block;
+    display: inline-block;
     text-decoration: none;
     color: inherit;
     width: 100%;
@@ -102,6 +104,7 @@
 	-webkit-background-clip: text;
 	background-clip: text;
 	background-image: linear-gradient(to bottom, #000, #000, rgba(0, 0, 0, 0));
+	transition: .4s;
 }
 
 

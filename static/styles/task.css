@@ -209,3 +209,35 @@ h3 {
 .incorrect-test {
     background-color: rgb(255, 102, 102);
 }
+
+.radial-progress {
+  margin-right: 5px;
+  width: 20px;
+  height: 20px;
+  top: 4px;
+  display: grid inline;
+  place-items: center;
+  position: relative;
+  font-weight: 700;
+  font-size: max(10vmin, 1.4rem);
+}
+
+.radial-progress::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 50%;
+    z-index: -1;
+    background: conic-gradient(
+      rgb(195, 144, 224) var(--progress),
+      rgb(230, 230, 230) 0%
+    );
+
+    mask-image: radial-gradient(
+      transparent 40%,
+      black calc(40% + 0.5px)
+    );
+}

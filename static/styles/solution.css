@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+.solution-view {
+    --width: 600px;
+    font-family: 'Roboto', sans-serif;
+    width: var(--width);
+    margin-left: calc(50% - var(--width) / 2);
+}
+
+.solution-file {
+    margin-top: 50px;
+}
+
+.solution-code {
+    font-family: 'Open Sans', sans-serif;
+    white-space: pre;
+    margin-top: 6px;
+
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 40px 20px 40px 20px;
+    background-color: rgb(250, 250, 250);
+
+    color: #666;
+}
+
+.solution-tests {
+    --width: 400px;
+    width: var(--width);
+    margin-top: 60px;
+    margin-left: calc(50% - var(--width) / 2);
+}

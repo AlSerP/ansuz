@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load poll_extras %}
+
+{% load static %}
+
+{% block title %} Темы {% endblock %}
+
+{% block content %}
+<div class="solution-view">
+    <div class="task-card-header">
+        <h2>Просмотр решения для задачи "{{ solution.task.title }}"</h2>
+        <div class="task-mark">
+            <span>{{ solution.mark }}/100</span>
+            <div class="progress-box"><div class="progress-bar" style="width: {{ solution.mark }}%"></div></div>
+        </div>
+    </div>
+
+    <div class="solution-file">
+        <span>{% get_file_name solution.upload %}:</span>
+        <div class="solution-code">{{ file_text }}</div>
+    </div>
+
+    <div style="margin-top: 12px;">Результат выполнения: {{ solution.response }}</div>
+
+    <table cellpadding="0" cellspacing="0" border="0" class="solution-tests">
+        <tr class="solution-line">
+            <td align="left">Тест</td>
+            <td align="center">Вввод</td>
+            <td align="center">Выход</td>
+        </tr>
+        {% for test in solution.tests|str_to_json reversed %}
+        {% if test.is_correct %}
+        <tr class="solution-line correct-test">
+            {% else %}
+        <tr class="solution-line incorrect-test">
+            {% endif %}
+            <td align="left">{{ test.test }}</td>
+            <td align="center">{{ test.output }}</td>
+            <td align="center">{{ test.answer }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock%}

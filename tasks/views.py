@@ -4,6 +4,7 @@ from django.views.generic import CreateView, ListView, DetailView, DeleteView, U
 from .models import Solution, Task, Theme
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
+from accounts.models import CustomUser
 
 
 class UploadSolutionView(LoginRequiredMixin, CreateView):
@@ -65,8 +66,12 @@ class TaskView(DetailView):
         context['tests'] = data_task
 
         if self.request.user.is_authenticated:
-            context['solutions'] = task.get_solutions(self.request.user).order_by('-id')
-            context['best_solution'] = task.get_best_solution(self.request.user)
+            if self.kwargs.get('user') and self.request.user.has_perm('tasks.edit_tasks'):
+                user = CustomUser.objects.get(username=self.kwargs.get('user'))
+            else:
+                user = self.request.user
+            context['solutions'] = task.get_solutions(user).order_by('-id')
+            context['best_solution'] = task.get_best_solution(user)
 
         context['theme_tasks'] = Task.objects.filter(theme=Task.objects.get(id=self.kwargs.get('pk')).theme.id)
 
@@ -120,3 +125,23 @@ class ThemeCreationView(PermissionRequiredMixin, CreateView):
         theme = form.save()
         theme.save()
         return super().form_valid(form)
+
+
+class SolutionFileView(LoginRequiredMixin, DetailView):
+    model = Solution
+    template_name = 'tasks/solution.html'
+    context_object_name = 'solution'
+
+    def get_context_data(self, **kwargs):
+        context = super(SolutionFileView, self).get_context_data(**kwargs)
+        print(context['solution'].upload)
+        # sol = Solution.objects.all()
+        # for s in sol:
+        #     print(s.pk)
+        #
+        f = open('./media/' + str(context['solution'].upload), 'r')
+        file_text = f.read()
+        f.close()
+        context['file_text'] = file_text
+
+        return context
