@@ -23,6 +23,10 @@ def get_theme_permission_code(theme):
     return f'view_theme{theme.pk}'
 
 
+def get_permission_by_theme(theme: Theme):
+    return Permission.objects.get(codename=f'view_theme{theme.pk}')
+
+
 class UploadSolutionView(LoginRequiredMixin, CreateView):
     """Отправка решения"""
     model = Solution
@@ -44,7 +48,7 @@ class UploadSolutionView(LoginRequiredMixin, CreateView):
         return reverse_lazy('task', kwargs={'pk': self.kwargs.get('pk')})
 
 
-class ThemeTasksView(ListView):
+class ThemeTasksView(LoginRequiredMixin, ListView):
     """Тема со всеми задачами"""
     model = Task
     context_object_name = 'themes'
@@ -52,11 +56,12 @@ class ThemeTasksView(ListView):
     template_name = 'tasks/category.html'
 
     def get_queryset(self, **kwargs):
-        return Theme.objects.all()
-        # return themes
-        # if Tag.objects.filter(name=tag_name).exists():
-        #     # return Image.objects.filter(tags__contains=self.request.GET['search'])
-        #     return Tag.objects.get(name=tag_name).image_set.all()
+        allowed_themes = []
+        for theme in Theme.objects.all():
+            if self.request.user.has_perm(f'tasks.{get_theme_permission_code(theme)}'):
+                allowed_themes.append(theme)
+
+        return allowed_themes
 
 
 class TaskView(DetailView):
