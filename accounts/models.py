@@ -16,3 +16,6 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
+    def add_score(self, score):
+        self.score += score
+        self.save()

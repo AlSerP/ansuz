@@ -1,6 +1,8 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.models import Group
+from accounts.models import CustomUser
 from django.views.generic.edit import CreateView
+from django.views.generic import ListView
 from django.urls import reverse_lazy
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -28,6 +30,15 @@ class GroupCreateView (PermissionRequiredMixin, CreateView):
     model = Group
     fields = '__all__'
     permission_required = 'users.moderate_users'
+
+
+class LeadersView (ListView):
+    model = CustomUser
+    context_object_name = 'users'
+    template_name = 'leaderboard.html'
+
+    def get_queryset(self, **kwargs):
+        return CustomUser.objects.order_by('-score')
 
 
 # TODO: Возможность выдачи групп пользователям

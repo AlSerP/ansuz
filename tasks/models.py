@@ -51,6 +51,13 @@ class Task(models.Model):
 
         return None
 
+    def get_best_mark(self, user):
+        solutions = self.get_solutions(user).order_by("-mark")
+        if solutions:
+            return solutions[0].mark
+
+        return 0
+
 
 class Solution(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, null=False, related_name='solutions')
@@ -73,10 +80,17 @@ class Solution(models.Model):
         self.status = compiled['return_code']
         if self.status != 'ER':
             self.response = str(compiled['tests_passed']) + '/' + str(compiled['tests_number'])
+            self.update_score(compiled['mark'])
             self.mark = compiled['mark']
             self.tests = json.dumps(compiled['results'])
         else:
             self.response = compiled['message']
+
+    def update_score(self, mark):
+        current_mark = self.task.get_best_mark(self.user)
+        print(current_mark, mark)
+        if mark > current_mark:
+            self.user.add_score(mark - current_mark)
         # result = test_cpp(directory_path, self.task.tests, self.task.answers)
 
 

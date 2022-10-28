@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} Темы {% endblock %}
+
+{% block content %}
+<h2 id="section">Лидеры</h2>
+
+<table class="solutions-list">
+    <thead>
+        <tr>
+            <th align="left">№</th>
+            <th align="left">Пользователь</th>
+            <th align="left">Счет</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr class="table-line">
+            <td style="width: 5%">{{ forloop.counter }}</td>
+            <td>{{ user }}</td>
+            <td>{{ user.score }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock%}
