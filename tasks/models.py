@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator, FileExtensionValidator
 from time import gmtime, strftime
-from tester.tests_module import test_cpp
+from tester.tests_module import test_solution
 import json
 
 statuses = [
@@ -68,7 +68,7 @@ class Solution(models.Model):
         return f'{self.task} + {self.status}'
 
     def compile(self):
-        compiled: dict = test_cpp(str(self.upload), self.task.tests, self.task.answers)
+        compiled: dict = test_solution(str(self.upload), self.task.tests, self.task.answers)
         print(compiled['return_code'])
         self.status = compiled['return_code']
         if self.status != 'ER':
