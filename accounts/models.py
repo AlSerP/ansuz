@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from tasks.models import Task
 
 
 # def directory_path(instance, filename):
@@ -16,3 +17,13 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
+    def add_score(self, score):
+        self.score += score
+        self.save()
+
+    def update_score(self):
+        print('AAAAAAAAAA')
+        self.score = 0
+        tasks = Task.objects.all()
+        for task in tasks:
+            self.add_score(task.get_best_mark(self))

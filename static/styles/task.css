@@ -59,6 +59,10 @@ h3 {
     font-family: 'Roboto', sans-serif;
 }
 
+table {
+    font-family: 'Roboto', sans-serif;
+}
+
 .task_data_table {
     width: 80%;
     margin-left: 10%;
@@ -154,6 +158,7 @@ h3 {
     text-align: center;
 }
 
+/* Progress styles */
 .progress-box {
     width: 60px;
     height: 10px;
@@ -198,8 +203,8 @@ h3 {
     color: rgb(124, 68, 156);
 }
 
-.solution-line td {
-    border: none
+.table-line td {
+    border: none;
 }
 
 .correct-test {
@@ -228,6 +233,7 @@ h3 {
     top: 0;
     bottom: 0;
     left: 0;
+    left: 0;
     right: 0;
     border-radius: 50%;
     z-index: -1;
@@ -241,3 +247,4 @@ h3 {
       black calc(40% + 0.5px)
     );
 }
+/* Progress styles END */
