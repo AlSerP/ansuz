@@ -4,8 +4,10 @@ from accounts.models import CustomUser
 from django.views.generic.edit import CreateView
 from django.views.generic import ListView
 from django.urls import reverse_lazy
+from django.shortcuts import redirect
 from .forms import CustomUserCreationForm, CustomAuthenticationForm
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.conf import settings
 
 
 class UserLoginView (LoginView):
@@ -40,6 +42,18 @@ class LeadersView (ListView):
     def get_queryset(self, **kwargs):
         return CustomUser.objects.order_by('-score')
 
+
+def update_user_score(request, pk):
+    user = CustomUser.objects.get(pk=pk)
+    user.update_score()
+
+    return redirect(reverse_lazy('home'))
+
+def update_all_users_score(request):
+    users = CustomUser.objects.all()
+    for user in users:
+        user.update_score()
+    return redirect(reverse_lazy('home'))
 
 # TODO: Возможность выдачи групп пользователям
 def make_moderator(request):

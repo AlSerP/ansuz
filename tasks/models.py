@@ -80,17 +80,17 @@ class Solution(models.Model):
         self.status = compiled['return_code']
         if self.status != 'ER':
             self.response = str(compiled['tests_passed']) + '/' + str(compiled['tests_number'])
-            self.update_score(compiled['mark'])
             self.mark = compiled['mark']
             self.tests = json.dumps(compiled['results'])
+            self.update_score()
         else:
             self.response = compiled['message']
 
-    def update_score(self, mark):
+    def update_score(self):
         current_mark = self.task.get_best_mark(self.user)
-        print(current_mark, mark)
-        if mark > current_mark:
-            self.user.add_score(mark - current_mark)
+        print(current_mark, self.mark)
+        if self.mark > current_mark:
+            self.user.add_score(self.mark - current_mark)
         # result = test_cpp(directory_path, self.task.tests, self.task.answers)
 
 
