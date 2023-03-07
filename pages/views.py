@@ -14,3 +14,6 @@ class HomePageView(ListView):
             theme_id = None
 
         return Task.objects.filter(theme=theme_id)
+
+class YandexPageView(TemplateView):
+    template_name = 'yandex.html'

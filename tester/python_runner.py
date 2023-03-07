@@ -1,21 +1,24 @@
-from subprocess import Popen, PIPE, run
+from subprocess import Popen, PIPE
 
 
 def run_py(file, in_data):
-    p = Popen('python ' + file, shell=True, stdout=PIPE, stdin=PIPE, stderr=PIPE)  # Run file
-    value = bytes(str(in_data) + '\n', 'UTF-8')
+    p = Popen('python3 ' + file, shell=True, stdout=PIPE, stdin=PIPE, stderr=PIPE)  # Run file
+    #print(str(in_data))
+    # value = bytes(str(in_data) + '\n', 'UTF-8')
+    value = (str(in_data) + '\n').encode('utf-8')
     p.stdin.write(value)
     p.stdin.flush()
 
     result = p.stdout.readline().strip().decode()
+    error = p.stderr.readline().strip().decode()
     code = 'CO'
 
-    if p.stderr:
+    if error:
         code = 'ER'
-        result = p.stderr.readline().strip().decode()
+        result = error
     
     return code, result
 
 
-# if __name__ == "__main__":
-#     print(test_py('test.py', [1, 2, 3, 4], [2, 4, 6, 8]))
+if __name__ == "__main__":
+    print(run_py('test.py', 5))

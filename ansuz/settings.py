@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-8*o#vyumg4xw)@$i&a=9tlaz!u02g_!d$!2jl0%tkgdkq$u_jb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['ansuz.site']
 
 
 # Application definition
@@ -122,14 +122,14 @@ USE_TZ = True
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = '/home/g/gosha15a/gosha15a.beget.tech/public_html/staticfiles'
 
 STATICFILES_DIRS = [
-   os.path.join(BASE_DIR, "static"),
+   '/home/g/gosha15a/gosha15a.beget.tech/public_html/static',
 ]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/home/g/gosha15a/gosha15a.beget.tech/public_html/ansuz/media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

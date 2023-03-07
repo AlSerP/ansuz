@@ -16,7 +16,8 @@
                     <a href="{% url 'task' t_task.id %}" style="color: rgb(195, 144, 224);"><li>>> {{ t_task }}</li></a>
                     {% else %}
                         {% if user.is_authenticated %}
-                            <a href="{% url 'task' t_task.id %}"><li><div class="radial-progress" style="--progress: {% get_mark t_task user %}%"></div>{{ t_task }}</li></a>
+                            <!-- <a href="{% url 'task' t_task.id %}"><li><div class="radial-progress" style="--progress: {% get_mark t_task user %}%"></div>{{ t_task }}</li></a> -->
+                            <a href="{% url 'task' t_task.id %}"><li>{{ t_task }}</li></a>
                         {% else %}
                             <a href="{% url 'task' t_task.id %}"><li>{{ t_task }}</li></a>
                         {% endif%}

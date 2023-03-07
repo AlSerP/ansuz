@@ -1,28 +1,39 @@
 from tester.cpp_runner import run_cpp
 from tester.python_runner import run_py
-from subprocess import run
+from tester.test_ssh import ssh_compile_cpp, ssh_run_cpp
+# from cpp_runner import run_cpp
+# from python_runner import run_py
+from subprocess import call, PIPE
+from django.conf import settings
 import json
 
-def test_solution(file: str, input: list, output: list):
+def test_solution(file, input, output):
     type = file.split('.')[-1]
+    file_path = file
     if type == 'cpp':
-        return test_cpp(file, input, output)
+        # return test_cpp(settings.MEDIA_ROOT + '/' + file, input, output)
+        return test_cpp(settings.MEDIA_ROOT + '/' + file, input, output)
     if type == 'py':
-        return test_py(file, input, output)
+        return test_py(settings.MEDIA_ROOT + '/' + file, input, output)
     else:
         # ERROR MESSAGE
         pass
 
 
-def test_cpp(file: str, input: list, output: list) -> dict:
+def test_cpp(file, input, output):
     report = {}
-
-    status = run(['g++', 'media/' + file], capture_output=True)
-
-    if status.returncode == 1:
+    # status = run(['/usr/bin/g++', file], stdout=PIPE, stderr=PIPE)
+    # status = run(['ls'], stdout=PIPE, stderr=PIPE)
+    status = ssh_compile_cpp(file)
+    status = status.decode()
+    my_file = open("LOGS.txt", "a")
+    my_file.write(status + ' WGWERGWE')
+    my_file.close()
+    
+    if status:
         # Error case
         report['return_code'] = 'ER'
-        report['message'] = status.stderr.decode()
+        report['message'] = status
 
     else:
         correctness = True
@@ -32,7 +43,7 @@ def test_cpp(file: str, input: list, output: list) -> dict:
         in_list, out_list = json.loads(input), json.loads(output)
         tests_number = len(in_list)
         for i, question, answer in zip(range(1, tests_number + 1), in_list, out_list):
-            program_out = run_cpp(question)
+            program_out = ssh_run_cpp(question)
 
             test_correctness = (str(answer) == str(program_out))
             correctness *= test_correctness
@@ -60,7 +71,7 @@ def test_cpp(file: str, input: list, output: list) -> dict:
     #     json.dump(report, outfile)
     return report
 
-def test_py(file: str, input: list, output: list) -> dict:
+def test_py(file, input, output):
     report = {}
 
     correctness = True
@@ -72,6 +83,7 @@ def test_py(file: str, input: list, output: list) -> dict:
     tests_number = len(in_list)
 
     for i, question, answer in zip(range(1, tests_number + 1), in_list, out_list):
+        # code, program_out = run_py(file, question)
         code, program_out = run_py(file, question)
         if code == 'ER':
             report['return_code'] = 'ER'
@@ -103,4 +115,4 @@ def test_py(file: str, input: list, output: list) -> dict:
     return report
 
 if __name__ == "__main__":
-    print(test_cpp(input(), ['1 2', '2 2', '3 3', '4 1'], ['6', '8', '12', '10']))
+    print(test_cpp('test.cpp', '["1", "2"]', '["2 - 3", "3 - 6"]'))

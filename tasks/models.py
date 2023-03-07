@@ -57,7 +57,7 @@ class Solution(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
     mark = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     status = models.CharField(max_length=30, default=statuses[0][0], choices=statuses)
-    upload = models.FileField(upload_to=directory_path, validators=[FileExtensionValidator(allowed_extensions=['cpp'])])
+    upload = models.FileField(upload_to=directory_path, validators=[FileExtensionValidator(allowed_extensions=['cpp', 'py'])])
 
     response = models.CharField(max_length=250, null=True)
     tests = models.TextField(null=True)

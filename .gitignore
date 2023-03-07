@@ -6,7 +6,15 @@ db.sqlite3
 media/
 
 *.exe
+*.out
 *.pyc
 **/__init__.py
 **/__pycache__
 **/__pycache__/
+
+templates/yandex.html
+ansuz/tmp
+test_ssh.py
+ansuz/LOGS.txt
+ansuz/passenger_wsgi.py
+
