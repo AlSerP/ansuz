@@ -82,7 +82,7 @@ class Solution(models.Model):
         self.status = compiled['return_code']
         if self.status != 'ER':
             self.response = str(compiled['tests_passed']) + '/' + str(compiled['tests_number'])
-            self.mark = compiled['mark'] * self.task // 100
+            self.mark = compiled['mark'] * self.task.score // 100
             self.tests = json.dumps(compiled['results'])
             self.update_score()
         else:
