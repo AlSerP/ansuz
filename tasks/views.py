@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from accounts.models import CustomUser
 from django.contrib.contenttypes.models import ContentType
 from accounts.forms import GroupSelectForm
+from tasks.forms import SolutionUpdateForm
 from django.contrib.auth.models import Group
 from django.views.generic.edit import FormView
 from django.conf import settings
@@ -28,11 +29,16 @@ def get_permission_by_theme(theme: Theme):
     return Permission.objects.get(codename=f'view_theme{theme.pk}')
 
 
-class UploadSolutionView(LoginRequiredMixin, CreateView):
+class UploadSolutionView(PermissionRequiredMixin, CreateView):
     """Отправка решения"""
     model = Solution
     template_name = 'solution.html'
     fields = ['upload']
+
+    def has_permission(self,  **kwargs):
+        user = self.request.user
+        task = Task.objects.get(id=self.kwargs.get('pk'))
+        return user.has_perm(f'view_theme{task.theme.id}')
 
     def form_valid(self, form):
         task = Task.objects.get(pk=self.kwargs.get('pk'))
@@ -65,11 +71,16 @@ class ThemeTasksView(LoginRequiredMixin, ListView):
         return allowed_themes
 
 
-class TaskView(DetailView):
+class TaskView(PermissionRequiredMixin, DetailView):
     """Отдельная задача"""
     model = Task
     template_name = 'tasks/task_page.html'
     context_object_name = 'task'
+
+    def has_permission(self,  **kwargs):
+        user = self.request.user
+        task = Task.objects.get(id=self.kwargs.get('pk'))
+        return user.has_perm(f'view_theme{task.theme.id}')
 
     def get_context_data(self, **kwargs):
         context = super(TaskView, self).get_context_data(**kwargs)
@@ -155,6 +166,17 @@ class ThemeCreationView(PermissionRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+class TaskSolutionsView(PermissionRequiredMixin, ListView):
+    model = Solution
+    context_object_name = 'solutions'
+    template_name = 'tasks/solutions_list.html'
+    permission_required = 'tasks.edit_tasks'
+
+    def get_queryset(self, **kwargs):
+        task = Task.objects.get(id=self.kwargs.get('pk'))
+        return Solution.objects.filter(task=task)
+
+
 class SolutionFileView(LoginRequiredMixin, DetailView):
     model = Solution
     template_name = 'tasks/solution.html'
@@ -175,6 +197,29 @@ class SolutionFileView(LoginRequiredMixin, DetailView):
         # status = subprocess.run(["g++-7", "--version"])
         # status = subprocess.run(['bash','-c', 'ls /usr/bin/'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return context
+
+
+class SolutionDeleteView(PermissionRequiredMixin, DeleteView):
+    model = Solution
+    success_url = reverse_lazy('home')
+    template_name = 'forms/solution_delete.html'
+    permission_required = 'tasks.edit_tasks'
+
+
+class SolutionUpdateView(PermissionRequiredMixin, UpdateView):
+    model = Solution
+    success_url = reverse_lazy('home')
+    form_class = SolutionUpdateForm
+    template_name = 'forms/solution_update.html'
+    permission_required = 'tasks.edit_tasks'
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.user.update_score()
+        return redirect(self.get_success_url())
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('solution', kwargs={'pk': self.kwargs.get('pk')})
 
 
 class ThemePermissionAppendView(PermissionRequiredMixin, FormView):

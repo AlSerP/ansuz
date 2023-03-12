@@ -31,8 +31,8 @@
             <h2>{{ task.title }}</h2>
             {% if user.is_authenticated %}
             <div class="task-mark">
-                <span>{% get_mark task user %}/100</span>
-                <div class="progress-box"><div class="progress-bar" style="width: {% get_mark task user %}%"></div></div>
+                <span>{% get_mark task user %}/{{ task.score }}</span>
+                <div class="progress-box"><div class="progress-bar" style="width: {% get_percents task user %}%"></div></div>
             </div>
             {% endif %}
         </div>
@@ -41,6 +41,7 @@
                 <span>Модерация: </span>
                 <a href="{% url 'delete_task' task.id %}">Удалить задачу</a>
                 <a href="{% url 'update_task' task.id %}">Редактировать задачу</a>
+                <a href="{% url 'task_solutions' task.id %}">Просмотреть решения</a>
             </div>
         {% endif %}
         <div class="task_text">

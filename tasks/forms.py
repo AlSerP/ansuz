@@ -8,12 +8,18 @@ class SolutionForm(forms.ModelForm):
         fields = ('upload',)
 
 
+class SolutionUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Solution
+        fields = ('mark',)
+
+
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = '__all__'
 
     help_texts = {
-        'tests': _('Данные, которые будут передаваться в программу.'),
-        'answers': _('Ожидаемый выход из программы.'),
+        'tests': 'Данные, которые будут передаваться в программу.',
+        'answers': 'Ожидаемый выход из программы.',
     }
