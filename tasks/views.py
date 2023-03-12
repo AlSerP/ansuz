@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from accounts.models import CustomUser
 from django.contrib.contenttypes.models import ContentType
 from accounts.forms import GroupSelectForm
-from tasks.forms import SolutionUpdateForm
+from tasks.forms import SolutionUpdateForm, TextSolutionForm
 from django.contrib.auth.models import Group
 from django.views.generic.edit import FormView
 from django.conf import settings
@@ -29,16 +29,42 @@ def get_permission_by_theme(theme: Theme):
     return Permission.objects.get(codename=f'view_theme{theme.pk}')
 
 
+# class UploadTextSolutionView(PermissionRequiredMixin, FormView):
+#     """Отправка решения"""
+#     model = Solution
+#     form_class = TextSolutionForm
+#     template_name = 'forms/text_solution.html'
+#
+#     def has_permission(self,  **kwargs):
+#         user = self.request.user
+#         task = Task.objects.get(id=self.kwargs.get('pk'))
+#         return user.has_perm(f'view_theme{task.theme.id}')
+#
+#     def form_valid(self, form):
+#         task = Task.objects.get(pk=self.kwargs.get('pk'))
+#         if task.is_open and task.is_visible:
+#             form.instance.task = task
+#             form.instance.user = self.request.user
+#             solution = form.save()
+#             solution.save()
+#             solution.compile()
+#             return super().form_valid(form)
+#         return redirect(reverse_lazy('home'))
+#
+#     def get_success_url(self, **kwargs):
+#         return reverse_lazy('task', kwargs={'pk': self.kwargs.get('pk')})
+
+
 class UploadSolutionView(PermissionRequiredMixin, CreateView):
     """Отправка решения"""
     model = Solution
     template_name = 'solution.html'
     fields = ['upload']
 
-    def has_permission(self,  **kwargs):
+    def has_permission(self, **kwargs):
         user = self.request.user
         task = Task.objects.get(id=self.kwargs.get('pk'))
-        return user.has_perm(f'view_theme{task.theme.id}')
+        return user.has_perm(f'tasks.view_theme{task.theme.id}')
 
     def form_valid(self, form):
         task = Task.objects.get(pk=self.kwargs.get('pk'))
@@ -80,7 +106,7 @@ class TaskView(PermissionRequiredMixin, DetailView):
     def has_permission(self,  **kwargs):
         user = self.request.user
         task = Task.objects.get(id=self.kwargs.get('pk'))
-        return user.has_perm(f'view_theme{task.theme.id}')
+        return user.has_perm(f'tasks.view_theme{task.theme.id}')
 
     def get_context_data(self, **kwargs):
         context = super(TaskView, self).get_context_data(**kwargs)
