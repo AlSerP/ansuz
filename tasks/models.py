@@ -36,6 +36,8 @@ class Task(models.Model):
 
     score = models.IntegerField(default=100, validators=[MinValueValidator(1)])
 
+    is_compiling = models.BooleanField(default=False)
+
     tests = models.TextField(null=False)  # Use JSON
     answers = models.TextField(null=False)  # Use JSON
 
@@ -79,7 +81,7 @@ class Solution(models.Model):
         return f'{self.task} + {self.status}'
 
     def compile(self):
-        if self.task.is_compiling and self.upload.filename.split('.')[1] != 'txt':
+        if self.task.is_compiling and str(self.upload).split('.')[1] != 'txt':
             compiled: dict = test_solution(str(self.upload), self.task.tests, self.task.answers)
             print(compiled['return_code'])
             self.status = compiled['return_code']
