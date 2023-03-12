@@ -66,7 +66,7 @@ class Task(models.Model):
 class Solution(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, null=False, related_name='solutions')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
-    mark = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    mark = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0)])
     status = models.CharField(max_length=30, default=statuses[0][0], choices=statuses)
     upload = models.FileField(upload_to=directory_path, validators=[FileExtensionValidator(allowed_extensions=['cpp', 'py', 'txt'])])
 
@@ -90,6 +90,7 @@ class Solution(models.Model):
                 self.update_score()
             else:
                 self.response = compiled['message']
+        self.save()
 
     def update_score(self):
         current_mark = self.task.get_best_mark(self.user)
@@ -99,7 +100,10 @@ class Solution(models.Model):
         # result = test_cpp(directory_path, self.task.tests, self.task.answers)
 
     def update_mark(self, mark):
-        self.mark = mark
+        if mark >= self.task.score:
+            self.mark = self.task.score
+        else:
+            self.mark = mark
         self.save()
 
 # myModel = MyModel()

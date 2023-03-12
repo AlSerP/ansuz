@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
 
 .solution-view {
     --width: 600px;
@@ -12,7 +12,7 @@
 }
 
 .solution-code {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Source Code Pro', monospace;
     white-space: pre;
     margin-top: 6px;
 
@@ -29,4 +29,31 @@
     width: var(--width);
     margin-top: 60px;
     margin-left: calc(50% - var(--width) / 2);
+}
+
+.code_area {
+    --width: 600px;
+    font-family: 'Source Code Pro', monospace;
+    width: var(--width);
+}
+
+#id_type {
+    margin-left: 23px;
+    padding: 15px;
+    border: 1px solid black;
+    color: black;
+    text-decoration: none;
+    transition: .4s;
+    background-color: white;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+}
+
+.text_solution {
+    font-family: 'Roboto', sans-serif;
+}
+
+label[for="id_text"] {
+    display: block;
 }

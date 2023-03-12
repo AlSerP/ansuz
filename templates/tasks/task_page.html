@@ -61,8 +61,10 @@
                 {% if task.is_open or is_moderator %}
                     <form method="post" action="upload" enctype="multipart/form-data" class="closed" id="solution_form">
                         {% csrf_token %}
-                        <label for="id_upload" class="custom-file-upload">Выбрать файл</label>
+                        <label for="id_upload" class="custom-file-upload"><img class="svg_icon" src="{% static 'svg/file_export.svg' %}" alt="File export"></label>
                         <input type="file" name="upload" required id="id_upload" style="display: none">
+
+                        <a href="{% url 'upload_text_solution' task.id %}" class="edit_button"><img class="svg_icon" src="{% static 'svg/edit.svg' %}" alt="Edit"></a>
                         <button class="send_button">Отправить</button>
                     </form>
 

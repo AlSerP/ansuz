@@ -124,9 +124,9 @@ table {
 
 .custom-file-upload {
     display: inline-block;
-    padding: 6px 12px;
+    padding: 10.5px;
     cursor: pointer;
-    margin: auto auto auto 60%;
+    margin: 0 0 0 60%;
     text-decoration: underline;
     color: #333;
 }
@@ -246,5 +246,9 @@ table {
       transparent 40%,
       black calc(40% + 0.5px)
     );
+}
+
+.edit_button {
+    padding: 10.5px;
 }
 /* Progress styles END */

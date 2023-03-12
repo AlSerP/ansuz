@@ -14,14 +14,14 @@ class SolutionUpdateForm(forms.ModelForm):
         fields = ('mark',)
 
 
-class TextSolutionForm(forms.ModelForm):
+class TextSolutionForm(forms.Form):
     FILE_TYPES = (
-        ('Py', 'Python 3.6'),
-        ('C++', 'G++ 12.2.0'),
-        ('TXT', 'Text'),
+        ('py', 'Python 3.6'),
+        ('cpp', 'G++ 12.2.0'),
+        ('txt', 'Text'),
     )
     type = forms.ChoiceField(choices=FILE_TYPES)
-    text = forms.CharField(label='Your name', max_length=100)
+    text = forms.CharField(label='Текст', max_length=6000, widget=forms.Textarea(attrs={"rows": "20", "cols": "20", "spellcheck": "false", "class": "code_area"}))
 
 
 class TaskForm(forms.ModelForm):
