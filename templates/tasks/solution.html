@@ -10,7 +10,7 @@
     <div class="task-card-header">
         <h2>Просмотр решения для задачи "{{ solution.task.title }}"</h2>
         <div class="task-mark">
-            <span>{{ solution.mark }}/100</span>
+            <span>{{ solution.mark }}/{{ solution.task.score }}</span>
             <div class="progress-box"><div class="progress-bar" style="width: {{ solution.mark }}%"></div></div>
         </div>
     </div>

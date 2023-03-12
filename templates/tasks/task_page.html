@@ -30,8 +30,8 @@
             <h2>{{ task.title }}</h2>
             {% if user.is_authenticated %}
             <div class="task-mark">
-                <span>{% get_mark task user %}/100</span>
-                <div class="progress-box"><div class="progress-bar" style="width: {% get_mark task user %}%"></div></div>
+                <span>{% get_mark task user %}/{{ task.score }}</span>
+                <div class="progress-box"><div class="progress-bar" style="width: {% get_percents task user %}%"></div></div>
             </div>
             {% endif %}
         </div>

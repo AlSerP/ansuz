@@ -22,9 +22,10 @@
                         <h4>{{ task.title }}</h4>
                         {% if user.is_authenticated %}
                             {% get_mark task user as mark %}
-                        <span class="mark {% if mark == '-' %} {% elif mark == 0 %} m_zero {% elif mark < 51 %} m_good {% else %} m_well {% endif %}">{{ mark }}/100</span>
+                            {% get_percents task user as percents %}
+                            <span class="mark {% if percents == '-' %} {% elif percents == 0 %} m_zero {% elif percents < 51 %} m_good {% else %} m_well {% endif %}">{{ mark }}/{{ task.score }}</span>
                         {% else %}
-                            <span class="mark">-/100</span>
+                            <span class="mark">-/{{ task.score }}</span>
                         {% endif %}
                     </div>
                     <div class="task-description">{{ task.description }}</div>
