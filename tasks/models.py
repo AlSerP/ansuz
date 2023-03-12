@@ -32,6 +32,8 @@ class Task(models.Model):
     description = models.CharField(max_length=500, null=True)
     text = models.TextField(null=False)
 
+    score = models.IntegerField(default=100, validators=[MinValueValidator(1)])
+
     tests = models.TextField(null=False)  # Use JSON
     answers = models.TextField(null=False)  # Use JSON
 
@@ -80,7 +82,7 @@ class Solution(models.Model):
         self.status = compiled['return_code']
         if self.status != 'ER':
             self.response = str(compiled['tests_passed']) + '/' + str(compiled['tests_number'])
-            self.mark = compiled['mark']
+            self.mark = compiled['mark'] * self.task // 100
             self.tests = json.dumps(compiled['results'])
             self.update_score()
         else:
@@ -93,6 +95,9 @@ class Solution(models.Model):
             self.user.add_score(self.mark - current_mark)
         # result = test_cpp(directory_path, self.task.tests, self.task.answers)
 
+    def update_mark(self, mark):
+        self.mark = mark
+        self.save()
 
 # myModel = MyModel()
 # listIWantToStore = [1,2,3,4,5,'hello']
