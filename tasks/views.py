@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from accounts.models import CustomUser
 from django.contrib.contenttypes.models import ContentType
 from accounts.forms import GroupSelectForm
-from tasks.forms import SolutionUpdateForm, TextSolutionForm
+from tasks.forms import SolutionUpdateForm
 from django.contrib.auth.models import Group
 from django.views.generic.edit import FormView
 from django.conf import settings
