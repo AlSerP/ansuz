@@ -40,6 +40,7 @@
                 <span>Модерация: </span>
                 <a href="{% url 'delete_task' task.id %}">Удалить задачу</a>
                 <a href="{% url 'update_task' task.id %}">Редактировать задачу</a>
+                <a href="{% url 'task_solutions' task.id %}">Просмотреть решения</a>
             </div>
         {% endif %}
         <div class="task_text">

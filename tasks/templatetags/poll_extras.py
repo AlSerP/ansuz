@@ -4,6 +4,11 @@ import json
 register = template.Library()
 
 
+@register.simple_tag(name='get_percents_by_solution')
+def get_percents_by_solution(solution):
+    return solution.mark * 100 // solution.task.score
+
+
 @register.simple_tag(name='get_percents')
 def get_percents(task, user):
     if task.get_best_solution(user):

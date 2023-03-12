@@ -22,7 +22,6 @@ class CustomUser(AbstractUser):
         self.save()
 
     def update_score(self):
-        print('AAAAAAAAAA')
         self.score = 0
         tasks = Task.objects.all()
         for task in tasks:

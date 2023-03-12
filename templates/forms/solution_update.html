@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} Решение | Изменить {% endblock %}
+
+{% block content %}
+<h2 id="section">Изменить оценку</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+</form>
+{% endblock%}

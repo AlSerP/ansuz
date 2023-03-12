@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load poll_extras %}
+
+{% load static %}
+
+{% block title %} Темы {% endblock %}
+
+{% block content %}
+
+<h1>Решения</h1>
+
+<table class="solutions-list">
+    <thead>
+        <tr>
+            <th align="left">№</th>
+            <th align="left">Пользователь</th>
+            <th align="left">Счет</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for solution in solutions %}
+        <tr class="table-line">
+            <td style="width: 5%">{{ forloop.counter }}</td>
+            <td>{{ solution.user }}</td>
+            <td>{{ solution.status }}  -  {{ solution.mark }}</td>
+            <td><a href="{% url 'solution' solution.pk %}" class="solution-more">Просмотр</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

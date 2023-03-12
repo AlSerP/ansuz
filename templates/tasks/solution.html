@@ -3,7 +3,7 @@
 
 {% load static %}
 
-{% block title %} Темы {% endblock %}
+{% block title %} Решение | Просмотр {% endblock %}
 
 {% block content %}
 <div class="solution-view">
@@ -11,9 +11,18 @@
         <h2>Просмотр решения для задачи "{{ solution.task.title }}"</h2>
         <div class="task-mark">
             <span>{{ solution.mark }}/{{ solution.task.score }}</span>
-            <div class="progress-box"><div class="progress-bar" style="width: {{ solution.mark }}%"></div></div>
+            <div class="progress-box"><div class="progress-bar" style="width: {% get_percents_by_solution solution %}%"></div></div>
         </div>
     </div>
+
+    {% can_edit_tasks user as is_moderator %}
+    {% if is_moderator %}
+            <div class="task-moderation">
+                <span>Модерация: </span>
+                <a href="{% url 'delete_solution' solution.id %}">Удалить решение</a>
+                <a href="{% url 'update_solution' solution.id %}">Изменить оценку</a>
+            </div>
+        {% endif %}
 
     <div class="solution-file">
         <span>{% get_file_name solution.upload %}:</span>
