@@ -1,18 +1,21 @@
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView
-from .models import Solution, Task, Theme
+from .models import Solution, Task, Theme, directory_path
 from django.contrib.auth.models import Permission
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from accounts.models import CustomUser
 from django.contrib.contenttypes.models import ContentType
 from accounts.forms import GroupSelectForm
-from tasks.forms import SolutionUpdateForm
+from tasks.forms import SolutionUpdateForm, TextSolutionForm
 from django.contrib.auth.models import Group
 from django.views.generic.edit import FormView
 from django.conf import settings
-import subprocess
+from time import gmtime, strftime
+from django.core.files.base import ContentFile, File
+import os
+
 
 def create_permission(per_code, per_name, con_type):
     tasks_per, created = Permission.objects.get_or_create(codename=per_code,
@@ -29,30 +32,45 @@ def get_permission_by_theme(theme: Theme):
     return Permission.objects.get(codename=f'view_theme{theme.pk}')
 
 
-# class UploadTextSolutionView(PermissionRequiredMixin, FormView):
-#     """Отправка решения"""
-#     model = Solution
-#     form_class = TextSolutionForm
-#     template_name = 'forms/text_solution.html'
-#
-#     def has_permission(self,  **kwargs):
-#         user = self.request.user
-#         task = Task.objects.get(id=self.kwargs.get('pk'))
-#         return user.has_perm(f'view_theme{task.theme.id}')
-#
-#     def form_valid(self, form):
-#         task = Task.objects.get(pk=self.kwargs.get('pk'))
-#         if task.is_open and task.is_visible:
-#             form.instance.task = task
-#             form.instance.user = self.request.user
-#             solution = form.save()
-#             solution.save()
-#             solution.compile()
-#             return super().form_valid(form)
-#         return redirect(reverse_lazy('home'))
-#
-#     def get_success_url(self, **kwargs):
-#         return reverse_lazy('task', kwargs={'pk': self.kwargs.get('pk')})
+def gen_file(user, text, file_type):
+    filename = 'main_.' + file_type
+    upload_time = strftime("%Y-%m-%d_%H-%M-%S", gmtime())
+    os.makedirs(('media/user_{0}/%s/' % upload_time).format(user.id))
+    file_path = ('media/user_{0}/%s/{1}' % upload_time).format(user.id, filename)
+    file = open(file_path, 'x')
+    file.write(text)
+    print('AAAAA', text, file_path)
+    file.close()
+    return file_path
+
+
+class UploadTextSolutionView(PermissionRequiredMixin, FormView):
+    """Отправка решения"""
+    model = Solution
+    form_class = TextSolutionForm
+    template_name = 'forms/text_solution.html'
+
+    def has_permission(self,  **kwargs):
+        user = self.request.user
+        task = Task.objects.get(id=self.kwargs.get('pk'))
+        return user.has_perm(f'view_theme{task.theme.id}')
+
+    def form_valid(self, form):
+        task = Task.objects.get(pk=self.kwargs.get('pk'))
+        if task.is_open and task.is_visible:
+            data = form.cleaned_data
+            solution = Solution.objects.create(user=self.request.user, task=task)
+            file_path = gen_file(self.request.user, data['text'], data['type'])
+            with open(file_path) as f:
+                solution.upload.save('main.' + data['type'], File(f))
+
+            solution.save()
+            solution.compile()
+            return super().form_valid(form)
+        return redirect(reverse_lazy('home'))
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('task', kwargs={'pk': self.kwargs.get('pk')})
 
 
 class UploadSolutionView(PermissionRequiredMixin, CreateView):
@@ -71,6 +89,7 @@ class UploadSolutionView(PermissionRequiredMixin, CreateView):
         if task.is_open and task.is_visible:
             form.instance.task = task
             form.instance.user = self.request.user
+            print('AAAAAA', form.instance.upload)
             solution = form.save()
             solution.save()
             solution.compile()

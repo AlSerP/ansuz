@@ -130,5 +130,10 @@ main {
     margin-top: 2px;
 }
 
+.svg_icon {
+    height: 30px;
+    display: inline-block;
+}
+
 /* (224, 236, 240) */
 /* (240, 239, 224) */
