@@ -11,7 +11,8 @@ from accounts.forms import GroupSelectForm
 from tasks.forms import SolutionUpdateForm, TextSolutionForm
 from django.contrib.auth.models import Group
 from django.views.generic.edit import FormView
-
+from django.conf import settings
+import subprocess
 
 def create_permission(per_code, per_name, con_type):
     tasks_per, created = Permission.objects.get_or_create(codename=per_code,
@@ -119,9 +120,8 @@ class TaskView(PermissionRequiredMixin, DetailView):
         data_task = []
         for test, answer in zip(tests, answers):
             data_task.append([test, answer])
-        data_task.reverse()
 
-        context['tests'] = data_task
+        context['tests'] = data_task[:2]
 
         if self.request.user.is_authenticated:
             if self.kwargs.get('user') and self.request.user.has_perm('tasks.edit_tasks'):
@@ -215,11 +215,13 @@ class SolutionFileView(LoginRequiredMixin, DetailView):
         # for s in sol:
         #     print(s.pk)
         #
-        f = open('./media/' + str(context['solution'].upload), 'r')
+        #f = open('./media/' + str(context['solution'].upload), 'r')
+        f = open(settings.MEDIA_ROOT + '/' + str(context['solution'].upload), 'r')
         file_text = f.read()
         f.close()
         context['file_text'] = file_text
-
+        # status = subprocess.run(["g++-7", "--version"])
+        # status = subprocess.run(['bash','-c', 'ls /usr/bin/'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return context
 
 

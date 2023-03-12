@@ -9,7 +9,9 @@ urlpatterns = [
     path('user/', include('accounts.urls')),
     # path('user/', include('django.contrib.auth.urls')),
     path('task/', include('tasks.urls')),
-    path('', RedirectView.as_view(url='task/')),
+    path('', include('pages.urls')),
+    path('favicon.ico', RedirectView.as_view(url='/static/images/favicon.ico'))
+    # path('', RedirectView.as_view(url='task/')),
 ]
 
 if settings.DEBUG:
