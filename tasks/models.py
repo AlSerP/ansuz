@@ -34,6 +34,8 @@ class Task(models.Model):
 
     score = models.IntegerField(default=100, validators=[MinValueValidator(1)])
 
+    is_compiling = models.BooleanField(default=False)
+
     tests = models.TextField(null=False)  # Use JSON
     answers = models.TextField(null=False)  # Use JSON
 
@@ -66,7 +68,7 @@ class Solution(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
     mark = models.PositiveSmallIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     status = models.CharField(max_length=30, default=statuses[0][0], choices=statuses)
-    upload = models.FileField(upload_to=directory_path, validators=[FileExtensionValidator(allowed_extensions=['cpp', 'py'])])
+    upload = models.FileField(upload_to=directory_path, validators=[FileExtensionValidator(allowed_extensions=['cpp', 'py', 'txt'])])
 
     response = models.CharField(max_length=250, null=True)
     tests = models.TextField(null=True)
@@ -77,16 +79,17 @@ class Solution(models.Model):
         return f'{self.task} + {self.status}'
 
     def compile(self):
-        compiled: dict = test_solution(str(self.upload), self.task.tests, self.task.answers)
-        print(compiled['return_code'])
-        self.status = compiled['return_code']
-        if self.status != 'ER':
-            self.response = str(compiled['tests_passed']) + '/' + str(compiled['tests_number'])
-            self.mark = compiled['mark'] * self.task.score // 100
-            self.tests = json.dumps(compiled['results'])
-            self.update_score()
-        else:
-            self.response = compiled['message']
+        if self.task.is_compiling and str(self.upload).split('.')[1] != 'txt':
+            compiled: dict = test_solution(str(self.upload), self.task.tests, self.task.answers)
+            print(compiled['return_code'])
+            self.status = compiled['return_code']
+            if self.status != 'ER':
+                self.response = str(compiled['tests_passed']) + '/' + str(compiled['tests_number'])
+                self.mark = compiled['mark'] * self.task.score // 100
+                self.tests = json.dumps(compiled['results'])
+                self.update_score()
+            else:
+                self.response = compiled['message']
 
     def update_score(self):
         current_mark = self.task.get_best_mark(self.user)
