@@ -15,6 +15,13 @@ from django.conf import settings
 from time import gmtime, strftime
 from django.core.files.base import ContentFile, File
 import os
+import sys
+
+
+def log(text):
+    my_file = open("LOGS.txt", "a")
+    my_file.write(text)
+    my_file.close()
 
 
 def create_permission(per_code, per_name, con_type):
@@ -37,10 +44,12 @@ def gen_file(user, text, file_type):
     upload_time = strftime("%Y-%m-%d_%H-%M-%S", gmtime())
     os.makedirs(('media/user_{0}/%s/' % upload_time).format(user.id))
     file_path = ('media/user_{0}/%s/{1}' % upload_time).format(user.id, filename)
-    file = open(file_path, 'x')
-    file.write(text)
-    print('AAAAA', text, file_path)
-    file.close()
+    log(sys.getfilesystemencoding())
+    with open(file_path, 'x', encoding='utf-8') as file:
+        file.write(text)
+    # file = open(file_path, 'x')
+    # file.write(text)
+    # file.close()
     return file_path
 
 
@@ -58,10 +67,11 @@ class UploadTextSolutionView(PermissionRequiredMixin, FormView):
     def form_valid(self, form):
         task = Task.objects.get(pk=self.kwargs.get('pk'))
         if task.is_open and task.is_visible:
+            self.request.encoding = "utf-8"
             data = form.cleaned_data
             solution = Solution.objects.create(user=self.request.user, task=task)
             file_path = gen_file(self.request.user, data['text'], data['type'])
-            with open(file_path) as f:
+            with open(file_path, 'rb') as f:
                 solution.upload.save('main.' + data['type'], File(f))
 
             solution.save()
@@ -89,7 +99,7 @@ class UploadSolutionView(PermissionRequiredMixin, CreateView):
         if task.is_open and task.is_visible:
             form.instance.task = task
             form.instance.user = self.request.user
-            print('AAAAAA', form.instance.upload)
+            # print('AAAAAA', form.instance.upload)
             solution = form.save()
             solution.save()
             solution.compile()
@@ -235,10 +245,10 @@ class SolutionFileView(LoginRequiredMixin, DetailView):
         #     print(s.pk)
         #
         #f = open('./media/' + str(context['solution'].upload), 'r')
-        f = open(settings.MEDIA_ROOT + '/' + str(context['solution'].upload), 'r')
+        f = open(settings.MEDIA_ROOT + '/' + str(context['solution'].upload), 'rb')
         file_text = f.read()
         f.close()
-        context['file_text'] = file_text
+        context['file_text'] = file_text.decode('utf-8')
         # status = subprocess.run(["g++-7", "--version"])
         # status = subprocess.run(['bash','-c', 'ls /usr/bin/'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return context
