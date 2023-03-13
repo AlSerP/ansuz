@@ -232,10 +232,15 @@ class TaskSolutionsView(PermissionRequiredMixin, ListView):
         return Solution.objects.filter(task=task)
 
 
-class SolutionFileView(LoginRequiredMixin, DetailView):
+class SolutionFileView(PermissionRequiredMixin, DetailView):
     model = Solution
     template_name = 'tasks/solution.html'
     context_object_name = 'solution'
+
+    def has_permission(self,  **kwargs):
+        user = self.request.user
+        solution = Solution.objects.get(id=self.kwargs.get('pk'))
+        return user.has_perm('tasks.edit_tasks') or solution.user == user
 
     def get_context_data(self, **kwargs):
         context = super(SolutionFileView, self).get_context_data(**kwargs)
