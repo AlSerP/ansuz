@@ -53,7 +53,7 @@ class UploadTextSolutionView(PermissionRequiredMixin, FormView):
     def has_permission(self,  **kwargs):
         user = self.request.user
         task = Task.objects.get(id=self.kwargs.get('pk'))
-        return user.has_perm(f'view_theme{task.theme.id}')
+        return user.has_perm(f'tasks.view_theme{task.theme.id}')
 
     def form_valid(self, form):
         task = Task.objects.get(pk=self.kwargs.get('pk'))
