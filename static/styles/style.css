@@ -135,5 +135,20 @@ main {
     display: inline-block;
 }
 
+.leader-line-1 {
+    color: gold;
+}
+
+.leader-line-2 {
+    color: silver;
+}
+
+.leader-line-3 {
+    color: #cd7f32;
+}
+
+.leader-icon {
+    height: 15px;
+}
 /* (224, 236, 240) */
 /* (240, 239, 224) */
