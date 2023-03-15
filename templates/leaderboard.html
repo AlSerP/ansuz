@@ -17,11 +17,31 @@
     </thead>
     <tbody>
         {% for user in users %}
+        {% if forloop.counter == 1 %}
+        <tr class="table-line leader-line-{{ forloop.counter }}">
+            <td style="width: 5%">{{ forloop.counter }}</td>
+            <td>{{ user }} <img class="leader-icon" src="{% static 'svg/crown_1.svg' %}" alt="Crown"></td>
+            <td>{{ user.score }}</td>
+        </tr>
+        {% elif forloop.counter == 2 %}
+        <tr class="table-line leader-line-{{ forloop.counter }}">
+            <td style="width: 5%">{{ forloop.counter }}</td>
+            <td>{{ user }} <img class="leader-icon" src="{% static 'svg/crown_2.svg' %}" alt="Crown"></td>
+            <td>{{ user.score }}</td>
+        </tr>
+        {% elif forloop.counter == 3 %}
+        <tr class="table-line leader-line-{{ forloop.counter }}">
+            <td style="width: 5%">{{ forloop.counter }}</td>
+            <td>{{ user }} <img class="leader-icon" src="{% static 'svg/crown_3.svg' %}" alt="Crown"></td>
+            <td>{{ user.score }}</td>
+        </tr>
+        {% else %}
         <tr class="table-line">
             <td style="width: 5%">{{ forloop.counter }}</td>
             <td>{{ user }}</td>
             <td>{{ user.score }}</td>
         </tr>
+        {% endif %}
         {% endfor %}
     </tbody>
 </table>
